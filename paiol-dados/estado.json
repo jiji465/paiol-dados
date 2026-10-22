@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:08:55.166Z",
+ "salvoEm": "2026-10-22T14:09:01.100Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -281,7 +281,13 @@
     "x": 6.25,
     "y": 21,
     "w": 0.8,
-    "h": 0.8
+    "h": 0.8,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjm9ysb42fz.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "suplementos",
