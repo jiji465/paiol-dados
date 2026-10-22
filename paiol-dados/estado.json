@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:48:20.588Z",
+ "salvoEm": "2026-10-22T14:48:28.317Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -193,7 +193,12 @@
     "y": 6,
     "w": 0.5,
     "h": 11.1,
-    "fotos": []
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjnop7fac02.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "balcao",
