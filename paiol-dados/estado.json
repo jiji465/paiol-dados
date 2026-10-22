@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T17:59:55.518Z",
+ "salvoEm": "2026-10-22T18:00:07.636Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -488,6 +488,16 @@
       "legenda": ""
      }
     ]
+   },
+   {
+    "id": "xmvjuj7ymdir6",
+    "tipo": "porta",
+    "grupo": null,
+    "nome": "Porta",
+    "w": 1,
+    "h": 0.2,
+    "x": 6,
+    "y": 11
    }
   ]
  },
