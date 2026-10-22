@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:37:48.789Z",
+ "salvoEm": "2026-10-22T14:37:52.931Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -353,12 +353,7 @@
     "y": 5.6,
     "w": 0.5,
     "h": 10.2,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjnaznmzyp9.jpg",
-      "legenda": ""
-     }
-    ]
+    "fotos": []
    },
    {
     "id": "maquinas",
