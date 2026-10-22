@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:38:53.087Z",
+ "salvoEm": "2026-10-22T14:38:56.967Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -359,10 +359,6 @@
       "legenda": ""
      },
      {
-      "arquivo": "fotos/xmvjnc3yw67xd.jpg",
-      "legenda": ""
-     },
-     {
       "arquivo": "fotos/xmvjnc5u1m43p.jpg",
       "legenda": ""
      },
@@ -380,6 +376,10 @@
      },
      {
       "arquivo": "fotos/xmvjncdn30coy.jpg",
+      "legenda": ""
+     },
+     {
+      "arquivo": "fotos/xmvjncg03ll3f.jpg",
       "legenda": ""
      }
     ]
