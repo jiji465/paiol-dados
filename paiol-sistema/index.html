@@ -199,7 +199,11 @@ select.cel{cursor:pointer}
 .vista-planta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
 .vista-planta .segmento{width:min(300px,100%)}
 .planta-3d{display:block;width:100%;height:auto;border-radius:8px;background:var(--piso)}
-.planta-svg{display:block;width:100%;height:auto;touch-action:none;user-select:none;-webkit-user-select:none;border-radius:8px;background:var(--piso)}
+.planta-svg{display:block;width:100%;height:auto;touch-action:pan-x pan-y;user-select:none;-webkit-user-select:none;border-radius:8px;background:var(--piso)}
+.planta-svg [data-id],.planta-svg [data-alca]{touch-action:none}
+.consulta .planta-svg [data-id]{touch-action:auto;cursor:pointer!important}
+.planta-3d{touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.planta-3d.ampliada{touch-action:none}
 .legenda-cores{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--tinta-suave)}
 .legenda-cores span{display:inline-flex;align-items:center;gap:6px}
 .ponto{flex:none;width:12px;height:12px;border-radius:3px;border:1.5px solid var(--linha)}
@@ -238,25 +242,171 @@ select.cel{cursor:pointer}
 .entrada-cartao .lembrar{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--tinta-suave)}
 .entrada-cartao .erro{color:var(--perigo);font-weight:600;font-size:14px}
 .entrada-cartao .btn{justify-self:start}
+/* busca */
+.busca{position:relative;flex:1 1 260px;max-width:380px;min-width:0}
+.busca-campo{display:flex;align-items:center;gap:8px;border:1px solid var(--linha-forte);border-radius:9px;background:var(--campo);padding:0 10px}
+.busca-campo:focus-within{border-color:var(--acento);box-shadow:0 0 0 3px var(--acento-suave)}
+.busca-campo svg{width:16px;height:16px;flex:none;color:var(--tinta-fraca)}
+.busca-campo input{flex:1;min-width:0;border:0;background:transparent;font:500 14.5px var(--f-texto);color:var(--tinta);padding:8px 0;outline:none}
+.busca-lista{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:35;background:var(--painel);border:1px solid var(--linha);border-radius:10px;box-shadow:0 12px 30px var(--sombra);padding:6px;max-height:min(420px,70vh);overflow-y:auto;display:grid;gap:2px}
+.busca-lista button{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;align-items:center;text-align:left;border:0;background:none;border-radius:7px;padding:8px 9px;cursor:pointer;color:var(--tinta)}
+.busca-lista button:hover,.busca-lista button[aria-selected="true"]{background:var(--hover)}
+.busca-lista b{font-weight:600;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.busca-lista small{grid-column:2;font-size:12.5px;color:var(--tinta-suave);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.busca-lista .tipo-res{grid-row:span 2;font:600 10.5px/1 var(--f-texto);letter-spacing:.06em;text-transform:uppercase;color:var(--acento);background:var(--acento-suave);border-radius:5px;padding:5px 6px;min-width:62px;text-align:center}
+.busca-lista p{margin:6px 8px;color:var(--tinta-suave);font-size:14px}
+.btn-busca{display:none}
+.menu .item-celular,.menu button[hidden]{display:none}
+.ico{width:18px;height:18px;display:block}
+.so-celular{display:none}
+/* dobra de ferramentas e zoom do 3D */
+.dobra{border:1px solid var(--linha);border-radius:10px;background:var(--painel-2)}
+.dobra>summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;font:600 14px var(--f-texto);color:var(--tinta)}
+.dobra>summary::-webkit-details-marker{display:none}
+.dobra>summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--tinta-suave);border-bottom:2px solid var(--tinta-suave);transform:rotate(45deg) translateY(-2px);transition:transform .15s}
+.dobra[open]>summary::after{transform:rotate(-135deg) translateY(-2px)}
+.dobra-corpo{display:grid;gap:12px;padding:2px 12px 12px}
+.zoom3{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--linha-forte);border-radius:9px;padding:2px;background:var(--painel)}
+.zoom3 button{border:0;background:none;border-radius:6px;min-width:32px;height:30px;cursor:pointer;font:600 16px/1 var(--f-texto);color:var(--tinta)}
+.zoom3 button:hover{background:var(--hover)}
+.zoom3 span{font:500 12.5px var(--f-medida);color:var(--tinta-suave);min-width:44px;text-align:center}
+.planta-3d.ampliada{cursor:grab}
+.planta-3d text.rot3{transform-box:fill-box;transform-origin:center;transform:scale(var(--esc3,1))}
+.tabela-impl th:nth-child(3){width:200px}.tabela-impl th:nth-child(4){width:210px}.tabela-impl th:nth-child(5){width:150px}
+.planta-3d.arrastando{cursor:grabbing}
+.mini3d{display:block;width:100%;padding:0;border:1px solid var(--linha);border-radius:10px;background:var(--piso);cursor:pointer;overflow:hidden}
+.mini3d:hover{border-color:var(--acento)}
+.mini3d svg{display:block;width:100%;height:auto}
+@keyframes pulso{0%{stroke-opacity:1}100%{stroke-opacity:0}}
+.pulso{animation:pulso .9s ease-out 4;pointer-events:none}
+/* listas curtas da visão geral */
+.lista-curta{display:grid;gap:6px}
+.linha-curta{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 10px;align-items:center;width:100%;text-align:left;background:var(--painel-2);border:1px solid var(--linha);border-radius:8px;padding:8px 10px;cursor:pointer;color:var(--tinta)}
+.linha-curta:hover{border-color:var(--acento)}
+.linha-curta b{font-weight:600;font-size:14.5px;min-width:0}
+.linha-curta small{grid-column:2/4;color:var(--tinta-suave);font-size:12.5px}
+.etiqueta{display:inline-block;font:600 11.5px/1 var(--f-texto);border-radius:999px;padding:4px 8px;white-space:nowrap;background:var(--painel);border:1px solid var(--linha);color:var(--tinta-suave)}
+.etiqueta.atrasada{background:var(--aviso-fundo);border-color:var(--perigo);color:var(--perigo)}
+.etiqueta.ok{background:var(--ok-fundo);border-color:transparent;color:var(--ok)}
+.etiqueta.aviso{background:var(--aviso-fundo);border-color:transparent;color:var(--aviso)}
+.numero small{font-size:12.5px;color:var(--perigo);font-weight:600}
+/* pendências e implantação */
+.filtros{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.filtros label{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--tinta-suave)}
+.filtros select{font:500 14px var(--f-texto);color:var(--tinta);background:var(--campo);border:1px solid var(--linha-forte);border-radius:7px;padding:6px 8px}
+.tabela-pend{min-width:1080px}
+.cel-dupla{display:grid;gap:4px}
+input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
+.tabela-impl{min-width:1000px}
+.sit-sistema{font:600 13px/1 var(--f-texto);border-radius:999px;padding:6px 8px;border:1px solid var(--linha);background:var(--painel);color:var(--tinta-suave);cursor:pointer;max-width:100%}
+.sit-sistema[data-v="configurar"]{background:var(--aviso-fundo);color:var(--aviso);border-color:transparent}
+.sit-sistema[data-v="configurado"]{background:var(--acento-suave);color:var(--acento);border-color:transparent}
+.sit-sistema[data-v="testado"],.sit-sistema[data-v="uso"]{background:var(--ok-fundo);color:var(--ok);border-color:transparent}
+.faixas{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.faixa{border:1px solid var(--linha);border-radius:10px;padding:10px 12px;background:var(--painel-2);display:grid;gap:2px}
+.faixa b{font:700 24px/1 var(--f-titulo);font-variant-numeric:tabular-nums}
+.faixa span{font-size:12.5px;color:var(--tinta-suave)}
+.mensagem{width:100%;min-height:300px;font:400 14.5px/1.5 var(--f-texto);color:var(--tinta);background:var(--campo);border:1px solid var(--linha-forte);border-radius:8px;padding:10px;resize:vertical}
+/* fotos */
+.fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.foto{position:relative;aspect-ratio:1;border:1px solid var(--linha);border-radius:8px;overflow:hidden;background:var(--painel-2);padding:0;cursor:zoom-in}
+.foto img{width:100%;height:100%;object-fit:cover;display:block}
+.foto.carregando::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--hover),transparent);animation:brilho 1.2s infinite}
+@keyframes brilho{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.btn-fotos{display:inline-flex;align-items:center;gap:6px}
+.visor{position:fixed;inset:0;z-index:70;background:rgba(10,14,12,.88);display:grid;grid-template-rows:minmax(0,1fr) auto;padding:max(16px,env(safe-area-inset-top,0px)) 16px max(16px,env(safe-area-inset-bottom,0px))}
+.visor img{max-width:100%;max-height:100%;object-fit:contain;margin:auto;display:block;border-radius:6px}
+.visor-barra{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:center;padding-top:12px}
+.visor-barra input{flex:1 1 260px;max-width:460px;font:500 14.5px var(--f-texto);border:1px solid #556;border-radius:8px;padding:8px 10px;background:#1b211e;color:#eef}
+.visor-barra .btn{background:#1b211e;color:#eef;border-color:#556}
+.visor-barra span{color:#cdd;font-size:13px}
+/* versões */
+.versao{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;border:1px solid var(--linha);border-radius:8px;padding:9px 10px;background:var(--painel-2)}
+.versao.atual{border-color:var(--acento)}
+.versao b{font-weight:600;font-size:14.5px}
+.versao small{color:var(--tinta-suave);font-size:12.5px;grid-column:1}
+.previa{border:1px solid var(--acento);background:var(--acento-suave);border-radius:10px;padding:12px;display:grid;gap:8px}
+.previa p{margin:0}
+/* barra de navegação do celular */
+.barra-inferior{display:none}
+/* modo consulta: some tudo o que muda dados */
+.consulta [data-acao="desfazer"],.consulta [data-acao="salvar"],.consulta [data-acao="proc-novo"],.consulta [data-acao="proc-excluir"],.consulta [data-acao^="item-"],
+.consulta [data-acao^="raia-"],.consulta [data-acao="etapa-add"],.consulta [data-acao="etapa-subir"],.consulta [data-acao="etapa-descer"],.consulta [data-acao="etapa-duplicar"],
+.consulta [data-acao="etapa-excluir"],.consulta [data-acao^="saida-"],.consulta [data-acao^="setor-add"],.consulta [data-acao="setor-excluir"],.consulta [data-acao="foto-add"],
+.consulta [data-acao="foto-tirar"],.consulta [data-acao="versoes"],.consulta .ferramentas-planta,.consulta .so-edicao{display:none!important}
+.consulta .cel:hover{border-color:transparent}
+/* impressão do POP */
+#impressao{display:none}
+.pop{font-family:var(--f-texto);color:#1e2621;background:#fff;page-break-after:always;break-after:page}
+.pop:last-child{page-break-after:auto;break-after:auto}
+.pop-cab{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;border-bottom:3px solid #2f6b45;padding-bottom:10px;margin-bottom:12px}
+.pop-cab small{font:700 10pt var(--f-texto);letter-spacing:.12em;text-transform:uppercase;color:#2f6b45}
+.pop-cab h1{margin:2px 0 4px;font:700 22pt/1.1 var(--f-titulo)}
+.pop-cab p{margin:0;color:#4a564e;font-size:11pt}
+.pop-id{text-align:right;font-size:10pt;color:#4a564e;white-space:nowrap}
+.pop-id b{display:block;font:700 13pt var(--f-titulo);color:#1e2621}
+.pop h2{font:700 13pt var(--f-titulo);margin:14px 0 6px;color:#1e2621}
+.pop-quem{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:10.5pt;margin:0 0 8px}
+.pop-quem i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.pop-tab{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #b9c2b6;border-radius:10px;overflow:hidden;font-size:9.5pt}
+.pop-tab th{background:#eaf0e8;text-align:left;font-weight:700;padding:6px 7px;border-bottom:1px solid #b9c2b6}
+.pop-tab td{padding:6px 7px;border-bottom:1px solid #dde2da;vertical-align:top}
+.pop-tab tr:last-child td{border-bottom:0}
+.pop-tab tr{page-break-inside:avoid;break-inside:avoid}
+.pop-tab .n{width:30px;text-align:center}
+.pop-tab .n span{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;color:#fff;font:700 9pt var(--f-medida)}
+.pop-tab .det{display:block;color:#4a564e;margin-top:2px}
+.pop-tab .pend{color:#a8650f;font-weight:700}
+.pop-fig{page-break-inside:avoid;break-inside:avoid;margin-top:14px}
+.pop-fig p{margin:0 0 4px;font-size:10pt;font-weight:700}
+.pop-fig svg{display:block;width:100%;height:auto;max-height:15cm}
+.pop-fig small{display:block;font-size:9pt;color:#4a564e;margin-top:4px}
+.pop-assin{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:28px;page-break-inside:avoid;break-inside:avoid}
+.pop-assin div{border-top:1px solid #1e2621;padding-top:4px;font-size:10pt;color:#4a564e}
+@media print{
+  @page{size:A4;margin:14mm 12mm}
+  body.imprimindo{background:#fff!important}
+  body.imprimindo::before{display:none}
+  .imprimindo #app>:not(#impressao){display:none!important}
+  .imprimindo #impressao{display:block!important}
+}
 @media (min-width:1280px){ .com-gaveta .corpo,.com-gaveta .aviso-wrap{padding-right:440px} }
-@media (max-width:1100px){ .numeros{grid-template-columns:repeat(2,minmax(0,1fr))} .duas{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:1100px){ .numeros{grid-template-columns:repeat(2,minmax(0,1fr))} .duas{grid-template-columns:minmax(0,1fr)} .faixas{grid-template-columns:repeat(3,minmax(0,1fr))} }
 @media (max-width:900px){
-  .corpo{grid-template-columns:minmax(0,1fr);gap:16px}
-  .nav{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}
-  .nav-rotulo{display:none}
-  .nav-item{flex:none;width:auto;background:var(--painel);border:1px solid var(--linha);white-space:nowrap}
-  .nav-novo{margin:0;flex:none}
+  .corpo{grid-template-columns:minmax(0,1fr);gap:16px;padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .nav{display:none}
+  .barra-inferior{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--painel);border-top:1px solid var(--linha);box-shadow:0 -6px 18px var(--sombra);padding:4px max(4px,env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))}
+  .barra-inferior button{position:relative;display:grid;justify-items:center;gap:3px;border:0;background:none;border-radius:8px;padding:6px 2px;cursor:pointer;color:var(--tinta-suave);font:600 11.5px/1.1 var(--f-texto)}
+  .barra-inferior button[aria-current="page"]{color:var(--acento);background:var(--acento-suave)}
+  .barra-inferior .ico{width:22px;height:22px}
+  .barra-inferior .conta{position:absolute;top:2px;left:calc(50% + 6px);font-size:10.5px;padding:2px 5px}
   .cab-pagina h2,#p-nome-pag{font-size:26px}
+  .com-gaveta .barra-inferior{display:none}
 }
 @media (max-width:640px){
-  .topo-int{gap:8px 12px}
-  .acoes-topo{margin-left:0;width:100%;gap:6px}
+  .topo-int{gap:8px;flex-wrap:nowrap}
+  .marca{flex:1 1 auto;min-width:0}
+  .marca small{display:none}
+  .marca h1{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #btn-versoes,#btn-sair{display:none!important}
+  .menu .item-celular:not([hidden]){display:grid}
+  #btn-exportar:not([hidden]),#btn-desfazer{width:36px;height:34px;padding:0;display:inline-grid;place-items:center}
+  .acoes-topo{flex-wrap:nowrap;gap:6px;min-width:0}
   .acoes-topo .btn{padding:8px 10px;font-size:13px}
-  .status{font-size:12px;padding:4px 9px}
+  .status{font-size:0;padding:0;width:12px;height:12px;border:0;background:none;justify-content:center}
+  .status::before{width:10px;height:10px}
+  .rotulo-longo{display:none}
+  .so-celular{display:inline}
+  .btn-busca{display:inline-grid;place-items:center;width:36px;height:34px;padding:0}
+  .busca{display:none;position:absolute;left:12px;right:12px;top:calc(100% + 6px);max-width:none}
+  .busca-aberta .busca{display:block}
+  .topo-int{position:relative}
   .gaveta{top:auto;height:86vh;width:100%;border-left:0;border-top:1px solid var(--linha);border-radius:14px 14px 0 0;transform:translateY(105%)}
-  .marca h1{font-size:19px}
+  .faixas{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .secao{padding:14px}
+  .visor-barra input{flex-basis:100%}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.pulso,.foto.carregando::after{animation:none}}
 </style>
 <div id="app"></div>
 <script type="application/json" id="config">{"servidor":"/api/estado"}</script>
@@ -318,6 +468,13 @@ select.cel{cursor:pointer}
   let historico = [], somenteLeitura = false, salvarIndisponivel = false, salvando = false, gerando = false;
   let nsArtifact = null, nsDownloads = null, rascunhoPendente = null, inicioEdicao = null, arrItem = null;
   let exportando = false, modoMini = false;
+  let consulta = false, realce = null, timerRealce = null, busca = { itens: [], indice: -1 };
+  let zoom3 = { k: 1, x: 0, y: 0 }, base3 = null, gesto3 = null, arrastou3 = false;
+  const ponteiros3 = new Map();
+  let versoes = { lista: [], pagina: 0, mais: true, carregando: false, erro: '', previa: null };
+  let filtroQuem = '', filtroImpl = 'usam', textoMensagem = '', visorAberto = null, enviandoFotos = 0, dobraFerr = null;
+  const telaLarga = () => { try { return window.matchMedia('(min-width: 641px)').matches; } catch (e) { return true; } };
+  const fotoUrls = {};
 
   /* ---------- utilidades ---------- */
   const $ = (id) => document.getElementById(id);
@@ -391,6 +548,28 @@ select.cel{cursor:pointer}
     estado.processos.forEach((p) => p.etapas.forEach((t, i) => { if (t.situacao === 'confirmar') out.push({ p, t, n: i + 1 }); }));
     return out;
   }
+  // datas no formato aaaa-mm-dd, no fuso de quem usa
+  function hojeIso() { const d = new Date(), z = (n) => String(n).padStart(2, '0'); return d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate()); }
+  const dataValida = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s);
+  const diaMes = (s) => (dataValida(s) ? s.slice(8, 10) + '/' + s.slice(5, 7) : '');
+  const dataCurta = (s) => (dataValida(s) ? s.slice(8, 10) + '/' + s.slice(5, 7) + '/' + s.slice(0, 4) : '');
+  const atrasada = (t) => t.situacao === 'confirmar' && dataValida(t.prazo) && t.prazo < hojeIso();
+  // situação da etapa na implantação do sistema; sem escolha, vale "a configurar" quando já tem documento ou tela
+  const SIT_SISTEMA = { nao: 'Não usa o sistema', configurar: 'A configurar', configurado: 'Configurado', testado: 'Testado', uso: 'Em uso' };
+  const situacaoSistema = (t) => (SIT_SISTEMA[t.implantacao] ? t.implantacao : (String(t.registro || '').trim() || String(t.sistema || '').trim()) ? 'configurar' : 'nao');
+  function resumoImplantacao() {
+    const r = { usam: 0, prontas: 0, configurar: 0, configurado: 0, testado: 0, uso: 0 };
+    estado.processos.forEach((p) => p.etapas.forEach((t) => {
+      const s = situacaoSistema(t);
+      if (s === 'nao') return;
+      r.usam++; r[s]++;
+      if (s === 'testado' || s === 'uso') r.prontas++;
+    }));
+    return r;
+  }
+  const DOCUMENTOS = ['Pedido', 'Orçamento', 'NFC-e', 'NF-e', 'NFC-e ou NF-e', 'NF-e do fornecedor', 'Pedido de compra', 'Cadastro do produto', 'Entrada da NF-e', 'Boleto', 'Recibo', 'Comprovante de pagamento'];
+  const semAcento = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const fotosDe = (o) => (o && Array.isArray(o.fotos) ? o.fotos.filter((f) => f && typeof f.arquivo === 'string') : []);
 
   /* ---------- rascunho neste navegador ---------- */
   function lerRascunho() { try { const t = localStorage.getItem(CHAVE_RASCUNHO); return t ? JSON.parse(t) : null; } catch (e) { return null; } }
@@ -564,7 +743,7 @@ select.cel{cursor:pointer}
     return s;
   }
   function desenhar(o) {
-    const e = estado, W = e.planta.salao.w, H = e.planta.salao.h, M = o.mini ? 0.3 : 0.9, pref = o.mini ? 'm-' : '';
+    const e = estado, W = e.planta.salao.w, H = e.planta.salao.h, M = o.mini ? 0.3 : 0.9, pref = o.pref || (o.mini ? 'm-' : '');
     modoMini = !!o.mini;
     const p = [];
     p.push('<defs><pattern id="' + pref + 'grade-p" width="0.5" height="0.5" patternUnits="userSpaceOnUse"><path d="M0.5 0H0V0.5" fill="none" style="stroke:' +
@@ -595,6 +774,11 @@ select.cel{cursor:pointer}
       p.push('<rect data-alca="1" x="' + r2(sel.x + sel.w - 0.3) + '" y="' + r2(sel.y + sel.h - 0.3) + '" width="0.6" height="0.6" style="fill:#000;fill-opacity:0;cursor:nwse-resize"/>');
       p.push('<rect data-alca="1" x="' + r2(sel.x + sel.w - 0.13) + '" y="' + r2(sel.y + sel.h - 0.13) + '" width="0.26" height="0.26" rx="0.03" style="fill:' +
         cor('selecao') + ';stroke:' + cor('piso') + ';stroke-width:0.03;cursor:nwse-resize"/>');
+    }
+    const ac = !o.mini && !exportando && realce ? itemDe(realce) : null;
+    if (ac) {
+      const m = 0.18;
+      p.push(rect(ac.x - m, ac.y - m, ac.w + 2 * m, ac.h + 2 * m, 'fill:none;stroke:' + cor('selecao') + ';stroke-width:0.16', 0.12, ' class="pulso"'));
     }
     if (o.proc) p.push(rota(o.proc, pref, o.marcado));
     modoMini = false;
@@ -667,9 +851,9 @@ select.cel{cursor:pointer}
     const W = estado.planta.salao.w, H = estado.planta.salao.h, g = giro(o.rot || 0, W, H), U = g.U, V = g.V, t = ESP_PAREDE;
     const objs = [], rotulos = [], perto = 0.4;
     const halo = (fs) => ';paint-order:stroke;stroke:' + cor('piso') + ';stroke-width:' + r2(fs * 0.32) + ';stroke-linejoin:round';
-    const rotulo = (texto, u, v, z, fs, corT, peso) => rotulos.push({ texto, u, v, z, fs, corT: corT || cor('tinta'), peso: peso || 700 });
-    const sel = o.sel ? itemDe(o.sel) : null;
-    let s = '';
+    const rotulo = (texto, u, v, z, fs, corT, peso, prio) => rotulos.push({ texto, u, v, z, fs, corT: corT || cor('tinta'), peso: peso || 700, prio: prio || 0 });
+    const sel = o.sel ? itemDe(o.sel) : null, clicavel = !modoMini && !o.resumo;
+    let s = '', pulsos = '';
     // piso com grade de 1 m
     s += poli3([[0, 0, 0], [U, 0, 0], [U, V, 0], [0, V, 0]], 'fill:' + cor('piso') + ';stroke:none');
     for (let k = 1; k < U; k++) s += linha3([k, 0, 0], [k, V, 0], 'stroke:' + cor('grade-forte') + ';stroke-width:0.012');
@@ -703,7 +887,7 @@ select.cel{cursor:pointer}
     estado.planta.itens.filter((it) => it.tipo === 'area').forEach((it) => {
       const b = caixaGirada(g, it.x, it.y, it.w, it.h), f = corGrupo(it, 'f');
       s += poli3([[b.u0, b.v0, 0.003], [b.u1, b.v0, 0.003], [b.u1, b.v1, 0.003], [b.u0, b.v1, 0.003]], 'fill:' + f + ';fill-opacity:0.75;stroke:none');
-      rotulo(it.nome, (b.u0 + b.u1) / 2, (b.v0 + b.v1) / 2, 0.02, Math.max(0.3, Math.min(0.4, (b.u1 - b.u0) / 4)), cor('tinta'), 800);
+      rotulo(it.nome, (b.u0 + b.u1) / 2, (b.v0 + b.v1) / 2, 0.02, Math.max(0.3, Math.min(0.4, (b.u1 - b.u0) / 4)), cor('tinta'), 800, (b.u1 - b.u0) * (b.v1 - b.v0));
       const e = 0.1, h2 = 1.2, borda = (a, c) => Math.abs(a - c) < 0.08;
       const lados = [];
       if (!borda(it.y, 0)) lados.push([it.x, it.y - e / 2, it.w, e]);
@@ -759,12 +943,18 @@ select.cel{cursor:pointer}
         topo = 0.95;
         d = () => bloco3(Object.assign({ z0: 0, z1: 0.95 }, b), f, bd) + destaque(0.95);
       }
-      const marca = modoMini ? d : () => '<g data-id3="' + esc(it.id) + '" style="cursor:pointer">' + d() + '</g>';
+      const marca = !clicavel ? d : () => '<g data-id3="' + esc(it.id) + '" style="cursor:pointer">' + d() + '</g>';
       objs.push(Object.assign({ camada: 2, d: marca }, b));
       const tam = it.tipo === 'pessoa' ? 0.26 : Math.max(0.27, Math.min(0.4, Math.max(b.u1 - b.u0, b.v1 - b.v0) / Math.max(4, it.nome.length * 0.3)));
-      rotulo(it.nome, cu, cv, topo + (it.tipo === 'pessoa' ? 0.12 : 0.05), tam, cor('tinta'), it.tipo === 'pessoa' ? 600 : 700);
+      rotulo(it.nome, cu, cv, topo + (it.tipo === 'pessoa' ? 0.12 : 0.05), tam, cor('tinta'), it.tipo === 'pessoa' ? 600 : 700, it.tipo === 'pessoa' ? 0 : (b.u1 - b.u0) * (b.v1 - b.v0) + topo);
+      if (clicavel && realce === it.id) {
+        const m = 0.22, z = topo + 0.03;
+        pulsos += poli3([[b.u0 - m, b.v0 - m, z], [b.u1 + m, b.v0 - m, z], [b.u1 + m, b.v1 + m, z], [b.u0 - m, b.v1 + m, z]], 'fill:none;stroke:' + cor('selecao') + ';stroke-width:0.12;stroke-linejoin:round', ' class="pulso"') +
+          poli3([[b.u0 - m, b.v0 - m, 0.01], [b.u1 + m, b.v0 - m, 0.01], [b.u1 + m, b.v1 + m, 0.01], [b.u0 - m, b.v1 + m, 0.01]], 'fill:' + cor('selecao') + ';fill-opacity:0.18;stroke:none', ' class="pulso"');
+      }
     });
     ordenar3(objs).forEach((x) => { s += x.d(); });
+    s += pulsos;
     // nomes por cima de tudo, para ficarem legíveis
     const ocupados = [];
     // caminho do processo: pinos numerados acima de onde cada etapa acontece
@@ -797,15 +987,25 @@ select.cel{cursor:pointer}
       });
     }
     const cabe = (q) => ocupados.every((o2) => q.x1 <= o2.x0 || q.x0 >= o2.x1 || q.y1 <= o2.y0 || q.y0 >= o2.y1);
-    if (!modoMini) rotulos.slice().sort((a, b) => b.fs - a.fs).forEach((r) => {
-      const c0 = iso(r.u, r.v, r.z), lw = r.texto.length * r.fs * 0.56 + 0.1, lh = r.fs * 1.2;
-      let c = c0;
-      for (const k of [0, -1, 1, -2, 2, -3]) {
-        const y = c0[1] + k * lh, q = { x0: c0[0] - lw / 2, x1: c0[0] + lw / 2, y0: y - lh / 2, y1: y + lh / 2 };
-        if (cabe(q)) { c = [c0[0], y]; ocupados.push(q); break; }
+    // procura um lugar livre perto do ponto: sobe, desce e anda para os lados; se não achar, diminui a letra
+    const lugar = (c0, texto, fs) => {
+      const lw = texto.length * fs * 0.56 + 0.1, lh = fs * 1.2;
+      for (const k of [0, -1, 1, -2, 2, -3, 3]) for (const dx of [0, -0.45, 0.45]) {
+        const x = c0[0] + dx * lw, y = c0[1] + k * lh, q = { x0: x - lw / 2, x1: x + lw / 2, y0: y - lh / 2, y1: y + lh / 2 };
+        if (cabe(q)) { ocupados.push(q); return [x, y]; }
       }
-      s += '<text x="' + r2(c[0]) + '" y="' + r2(c[1]) + '" text-anchor="middle" dominant-baseline="central" style="pointer-events:none;font-family:' + fonte('titulo') +
-        ';font-weight:' + r.peso + ';font-size:' + r2(r.fs) + 'px;fill:' + r.corT + halo(r.fs) + '">' + esc(r.texto) + '</text>';
+      return null;
+    };
+    const lista = o.resumo
+      ? rotulos.filter((r) => r.prio > 0.4).map((r) => Object.assign({}, r, { fs: Math.min(0.78, Math.max(0.5, r.fs * 1.9)) })).sort((a, b) => b.prio - a.prio)
+      : rotulos.slice().sort((a, b) => b.fs - a.fs);
+    if (!modoMini) lista.forEach((r) => {
+      const c0 = iso(r.u, r.v, r.z);
+      let fs = r.fs, c = lugar(c0, r.texto, fs);
+      if (!c && !o.resumo) { fs = Math.max(0.2, r.fs * 0.8); c = lugar(c0, r.texto, fs); }
+      if (!c) { if (o.resumo) return; fs = r.fs; c = c0; }
+      s += '<text class="rot3" x="' + r2(c[0]) + '" y="' + r2(c[1]) + '" text-anchor="middle" dominant-baseline="central" style="pointer-events:none;font-family:' + fonte('titulo') +
+        ';font-weight:' + r.peso + ';font-size:' + r2(fs) + 'px;fill:' + r.corT + halo(fs) + '">' + esc(r.texto) + '</text>';
     });
     s += pinos;
     const defs = '<defs><marker id="seta3" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L9 5L1 9z" style="fill:' + cor('rota') + '"/></marker>' +
@@ -919,16 +1119,37 @@ select.cel{cursor:pointer}
     }[t];
     return '<svg viewBox="0 0 26 20" aria-hidden="true">' + corpo + '</svg>';
   }
+  const ICONES = {
+    lupa: '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
+    desfazer: '<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
+    inicio: '<path d="M4 11l8-7 8 7"/><path d="M6 10v10h12V10"/>',
+    planta: '<rect x="3.5" y="3.5" width="17" height="17" rx="1.5"/><path d="M3.5 12h8V3.5M15 12h5.5M11.5 16v4.5"/>',
+    processos: '<rect x="3.5" y="4" width="7" height="5" rx="1.5"/><rect x="13.5" y="15" width="7" height="5" rx="1.5"/><path d="M7 9v4.5h10V15"/>',
+    setores: '<path d="M4 6h16M4 12h16M4 18h16"/><path d="M8 4v4M14 10v4M10 16v4"/>',
+    confirmar: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.5l2.5 2.5 5-6"/>',
+    foto: '<rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.6"/><path d="M8.5 6l1.5-2.5h4L15.5 6"/>',
+    historico: '<path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/><path d="M12 8v4.5l3 2"/>',
+    mais: '<circle cx="5.5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="18.5" cy="12" r="1.2"/>'
+  };
+  const icone = (n) => '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONES[n] + '</svg>';
   function shell() {
     return '<header class="topo"><div class="topo-int"><div class="marca"><small>Paiol</small><h1>Planta e processos</h1></div>' +
+      '<div class="busca" id="busca" role="search"><label class="busca-campo" for="busca-campo">' + icone('lupa') +
+      '<input type="search" id="busca-campo" placeholder="Buscar produto, setor ou etapa" autocomplete="off" aria-label="Buscar produto, setor ou etapa" aria-controls="busca-lista" aria-expanded="false"></label>' +
+      '<div class="busca-lista" id="busca-lista" role="listbox" hidden></div></div>' +
       '<div class="acoes-topo"><span class="status" id="status" role="status"></span>' +
-      '<button class="btn" type="button" data-acao="desfazer" id="btn-desfazer">Desfazer</button>' +
-      '<button class="btn" type="button" data-acao="menu-exportar" id="btn-exportar" aria-haspopup="true" aria-expanded="false">Exportar</button>' +
+      '<button class="btn btn-busca" type="button" data-acao="abrir-busca" aria-label="Buscar">' + icone('lupa') + '</button>' +
+      '<button class="btn" type="button" data-acao="versoes" id="btn-versoes" hidden title="Versões anteriores"><span class="rotulo-longo">Versões</span><span class="so-celular" aria-hidden="true">' + icone('historico') + '</span><span class="sr so-celular">Versões</span></button>' +
+      '<button class="btn" type="button" data-acao="desfazer" id="btn-desfazer" title="Desfazer"><span class="rotulo-longo">Desfazer</span><span class="so-celular" aria-hidden="true">' + icone('desfazer') + '</span><span class="sr so-celular">Desfazer</span></button>' +
+      '<button class="btn" type="button" data-acao="menu-exportar" id="btn-exportar" aria-haspopup="true" aria-expanded="false"><span class="rotulo-longo">Exportar</span><span class="so-celular" aria-hidden="true">' + icone('mais') + '</span><span class="sr so-celular">Mais opções</span></button>' +
       '<button class="btn btn-primario" type="button" data-acao="salvar" id="btn-salvar">Salvar</button>' +
       '<button class="btn btn-texto" type="button" data-acao="sair" id="btn-sair" hidden>Sair</button>' +
       '<div class="menu" id="menu-exportar" hidden>' +
+      '<button type="button" class="item-celular" data-acao="versoes" id="menu-versoes" hidden>Versões anteriores<small>Ver e restaurar salvamentos antigos</small></button>' +
       '<button type="button" data-acao="exp-word">Manual em Word<small>Capa, planta, setores, processos e pendências</small></button>' +
       '<button type="button" data-acao="exp-planta">Imagem da planta<small>PNG, com o caminho do processo escolhido na planta</small></button>' +
+      '<button type="button" data-acao="pop-todos">POP de todos os processos<small>Para imprimir ou salvar em PDF, um processo por página</small></button>' +
+      '<button type="button" class="item-celular" data-acao="sair" id="menu-sair" hidden>Sair<small>Pede a senha de novo neste aparelho</small></button>' +
       '</div></div></div></header>' +
       '<div class="aviso-wrap"><div class="aviso" id="aviso" hidden></div></div>' +
       '<div class="entrada" id="entrada" hidden><form class="entrada-cartao" id="form-entrada" autocomplete="on"><small>Paiol</small><h2>Planta e processos</h2>' +
@@ -937,58 +1158,102 @@ select.cel{cursor:pointer}
       '<label class="lembrar" for="lembrar"><input type="checkbox" id="lembrar" checked> Manter conectado neste navegador</label>' +
       '<p class="erro" id="entrada-erro" role="alert" hidden></p><button class="btn btn-primario" type="submit" id="btn-entrar">Entrar</button></form></div>' +
       '<div class="corpo"><nav class="nav" id="nav" aria-label="Seções"></nav><main class="principal" id="principal"></main></div>' +
-      '<aside class="gaveta" id="gaveta" aria-label="Painel de edição" inert><div class="gaveta-cab" id="gaveta-cab"></div><div class="gaveta-corpo"><div class="gaveta-grade" id="gaveta-corpo"></div></div></aside>';
+      '<nav class="barra-inferior" id="barra-inferior" aria-label="Seções"></nav>' +
+      '<aside class="gaveta" id="gaveta" aria-label="Painel de edição" inert><div class="gaveta-cab" id="gaveta-cab"></div><div class="gaveta-corpo"><div class="gaveta-grade" id="gaveta-corpo"></div></div></aside>' +
+      '<div class="visor" id="visor" role="dialog" aria-modal="true" aria-label="Foto" hidden></div>' +
+      '<input type="file" id="arquivo-foto" accept="image/*" multiple hidden>' +
+      '<div id="impressao"></div>';
   }
   function itemNav(id, rotulo, conta, alerta) {
     return `<button type="button" class="nav-item" data-acao="nav" data-vista="${esc(id)}"${vista === id ? ' aria-current="page"' : ''}><span>${esc(rotulo)}</span>` +
       (conta != null ? `<span class="conta${alerta ? ' alerta' : ''}">${conta}</span>` : '') + '</button>';
   }
   function renderNav() {
-    const pend = pendentes().length;
+    const pend = pendentes().length, impl = resumoImplantacao();
     $('nav').innerHTML = '<div class="nav-rotulo">Loja</div>' + itemNav('geral', 'Visão geral') + itemNav('planta', 'Planta da loja') + itemNav('setores', 'Setores', estado.setores.length) +
       '<div class="nav-rotulo">Processos</div>' + estado.processos.map((p) => { const c = contagem(p); return itemNav('proc:' + p.id, p.nome || 'Sem nome', c.ok + '/' + c.total); }).join('') +
       '<button type="button" class="btn-texto nav-novo" data-acao="proc-novo">+ Novo processo</button>' +
-      '<div class="nav-rotulo">Equipe</div>' + itemNav('pendencias', 'Pontos a confirmar', pend, pend > 0);
+      '<div class="nav-rotulo">Equipe e sistema</div>' + itemNav('pendencias', 'Pontos a confirmar', pend, pend > 0) +
+      itemNav('implantacao', 'Implantação do sistema', impl.usam ? impl.prontas + '/' + impl.usam : null);
+    const grupo = vista.indexOf('proc:') === 0 || vista === 'processos' || vista === 'implantacao' ? 'processos' : vista;
+    const botao = (id, rotulo, ic, conta) => `<button type="button" data-acao="nav" data-vista="${id}"${grupo === id ? ' aria-current="page"' : ''}>${icone(ic)}<span>${rotulo}</span>` +
+      (conta ? `<span class="conta alerta">${conta}</span>` : '') + '</button>';
+    $('barra-inferior').innerHTML = botao('geral', 'Início', 'inicio') + botao('planta', 'Planta', 'planta') + botao('processos', 'Processos', 'processos') +
+      botao('setores', 'Setores', 'setores') + botao('pendencias', 'Confirmar', 'confirmar', pend);
   }
 
   /* ---------- telas ---------- */
   function cabPagina(eyebrow, titulo, lead) {
     return `<div class="cab-pagina">${eyebrow ? `<span class="eyebrow">${esc(eyebrow)}</span>` : ''}<h2>${esc(titulo)}</h2>${lead ? `<p class="lead">${esc(lead)}</p>` : ''}</div>`;
   }
+  function cartoesProcessos() {
+    const procs = estado.processos;
+    return '<div class="lista-proc">' + (procs.length ? procs.map((p) => {
+      const c = contagem(p), pct = c.total ? Math.round(c.ok / c.total * 100) : 0;
+      return `<button type="button" class="proc-cartao" data-acao="nav" data-vista="proc:${esc(p.id)}"><b>${esc(p.nome || 'Sem nome')}</b>` +
+        (p.objetivo ? `<p>${esc(p.objetivo)}</p>` : '') +
+        `<div class="progresso"><div class="barra"><i style="width:${pct}%"></i></div><span>${c.ok} de ${c.total} confirmadas</span></div>` +
+        `<div class="chips">${p.raias.map((r) => `<span class="chip"><i style="background:${varRaia(p, r.id)}"></i>${esc(r.nome)}</span>`).join('')}</div></button>`;
+    }).join('') : '<p class="vazio">Nenhum processo ainda.</p>') + '</div>';
+  }
+  // pendências na ordem de urgência: atrasadas, depois com prazo mais perto, depois sem prazo
+  function pendentesOrdenadas() {
+    return pendentes().sort((a, b) => {
+      const pa = dataValida(a.t.prazo) ? a.t.prazo : '9999', pb = dataValida(b.t.prazo) ? b.t.prazo : '9999';
+      return pa < pb ? -1 : pa > pb ? 1 : 0;
+    });
+  }
+  function linhaPendencia(o) {
+    const t = o.t, p = o.p, atr = atrasada(t);
+    const prazo = dataValida(t.prazo) ? `<span class="etiqueta${atr ? ' atrasada' : ''}">${atr ? 'Atrasada, ' : 'Até '}${diaMes(t.prazo)}</span>` : '<span></span>';
+    return `<button type="button" class="linha-curta" data-acao="etapa-editar" data-proc="${esc(p.id)}" data-etapa="${esc(t.id)}"><span class="num-etapa" style="background:${varRaia(p, t.raia)}">${o.n}</span>` +
+      `<b>${esc(t.titulo || 'Sem título')}</b>${prazo}<small>${esc(p.nome || 'Sem nome')}${t.respConfirma ? ', confirma: ' + esc(t.respConfirma) : ''}</small></button>`;
+  }
   function telaGeral() {
-    const procs = estado.processos, etapas = procs.reduce((s, p) => s + p.etapas.length, 0), pend = pendentes().length;
+    const procs = estado.processos, etapas = procs.reduce((s, p) => s + p.etapas.length, 0), lista = pendentesOrdenadas(), pend = lista.length;
+    const atr = lista.filter((o) => atrasada(o.t)).length, impl = resumoImplantacao();
     return cabPagina('Visão geral', 'Planta e processos da Paiol', 'A loja, os setores e os processos de trabalho num lugar só. Escolha um processo para ver quem faz cada etapa, em que ordem e onde acontece.') +
       `<div class="numeros"><div class="numero"><b>${procs.length}</b><span>processos mapeados</span></div><div class="numero"><b>${etapas}</b><span>etapas descritas</span></div>` +
-      `<div class="numero"><b>${estado.setores.length}</b><span>setores da loja</span></div><div class="numero${pend ? ' alerta' : ''}"><b>${pend}</b><span>etapas a confirmar</span></div></div>` +
-      '<div class="duas"><section class="secao"><div class="secao-cab"><div><h3>Processos</h3><p>O número de etapas confirmadas com a equipe sobe conforme a validação avança.</p></div>' +
-      '<button class="btn btn-pequeno" type="button" data-acao="proc-novo">Novo processo</button></div><div class="lista-proc">' +
-      (procs.length ? procs.map((p) => {
-        const c = contagem(p), pct = c.total ? Math.round(c.ok / c.total * 100) : 0;
-        return `<button type="button" class="proc-cartao" data-acao="nav" data-vista="proc:${esc(p.id)}"><b>${esc(p.nome || 'Sem nome')}</b>` +
-          (p.objetivo ? `<p>${esc(p.objetivo)}</p>` : '') +
-          `<div class="progresso"><div class="barra"><i style="width:${pct}%"></i></div><span>${c.ok} de ${c.total} confirmadas</span></div>` +
-          `<div class="chips">${p.raias.map((r) => `<span class="chip"><i style="background:${varRaia(p, r.id)}"></i>${esc(r.nome)}</span>`).join('')}</div></button>`;
-      }).join('') : '<p class="vazio">Nenhum processo ainda.</p>') + '</div></section>' +
-      '<section class="secao mini"><div class="secao-cab"><div><h3>Planta da loja</h3><p>Planta esquemática, com os setores nas suas cores.</p></div>' +
+      `<div class="numero"><b>${impl.prontas}<span style="font-size:18px;color:var(--tinta-suave)"> de ${impl.usam}</span></b><span>etapas prontas no sistema</span></div>` +
+      `<div class="numero${pend ? ' alerta' : ''}"><b>${pend}</b><span>etapas a confirmar</span>${atr ? `<small>${atr} com prazo vencido</small>` : ''}</div></div>` +
+      '<div class="duas"><div class="principal"><section class="secao"><div class="secao-cab"><div><h3>Processos</h3><p>O número de etapas confirmadas com a equipe sobe conforme a validação avança.</p></div>' +
+      '<button class="btn btn-pequeno" type="button" data-acao="proc-novo">Novo processo</button></div>' + cartoesProcessos() + '</section>' +
+      '<section class="secao"><div class="secao-cab"><div><h3>Próximos pontos a confirmar</h3><p>Os que estão com prazo vencido aparecem primeiro.</p></div>' +
+      '<button class="btn btn-pequeno" type="button" data-acao="nav" data-vista="pendencias">Ver todos</button></div>' +
+      (pend ? '<div class="lista-curta">' + lista.slice(0, 5).map(linhaPendencia).join('') + '</div>' : '<p class="vazio">Todas as etapas estão confirmadas com a equipe.</p>') +
+      (pend ? '<div class="linha-botoes"><button class="btn btn-pequeno" type="button" data-acao="mensagem">Montar mensagem para o WhatsApp</button></div>' : '') + '</section></div>' +
+      '<section class="secao"><div class="secao-cab"><div><h3>A loja em 3D</h3><p>Toque na imagem para abrir a planta em 3D.</p></div>' +
       '<button class="btn btn-pequeno" type="button" data-acao="nav" data-vista="planta">Abrir a planta</button></div>' +
-      '<svg id="svg-mini" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Miniatura da planta da loja"></svg>' +
-      `<div class="linha-botoes"><button class="btn btn-pequeno" type="button" data-acao="nav" data-vista="pendencias">Ver os ${pend} pontos a confirmar</button></div></section></div>`;
+      '<button type="button" class="mini3d" data-acao="abrir-3d" aria-label="Abrir a planta em 3D"><svg id="svg-mini3d" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A loja em 3D"></svg></button>' +
+      '<div class="legenda-cores">' + GRUPOS.filter((g) => estado.planta.itens.some((it) => grupoDe(it) === g.id)).map((g) =>
+        `<span><i class="ponto" style="background:var(--g-${g.id}-f);border-color:var(--g-${g.id}-b)"></i>${esc(g.rotulo)}</span>`).join('') + '</div></section></div>';
+  }
+  function telaProcessos() {
+    const impl = resumoImplantacao();
+    return cabPagina('Processos', 'Processos da loja', 'Escolha um processo para ver o fluxo, o passo a passo e o caminho na planta.') +
+      '<section class="secao"><div class="secao-cab"><div><h3>Processos</h3></div><button class="btn btn-pequeno" type="button" data-acao="proc-novo">Novo processo</button></div>' + cartoesProcessos() + '</section>' +
+      '<section class="secao"><div class="secao-cab"><div><h3>Implantação do sistema</h3><p>' + (impl.usam ? impl.prontas + ' de ' + impl.usam + ' etapas que usam o sistema já foram testadas ou estão em uso.' : 'Nenhuma etapa ligada ao sistema ainda.') + '</p></div>' +
+      '<button class="btn btn-pequeno" type="button" data-acao="nav" data-vista="implantacao">Abrir</button></div></section>';
   }
   function telaPlanta() {
     const p = procDe(procRota);
-    return cabPagina('Loja', 'Planta da loja', vista3d ? 'A vista 3D mostra a loja em perspectiva, com a altura de prateleiras, paletes e balcões. Clique num bloco para ver os dados dele; para mudar de lugar, use a vista plana.'
+    return cabPagina('Loja', 'Planta da loja', vista3d ? 'A vista 3D mostra a loja em perspectiva, com a altura de prateleiras, paletes e balcões. Clique num bloco para ver os dados dele. Use + e − para aproximar e arraste para andar pela loja' + (consulta ? '.' : '; para mudar de lugar, use a vista plana.')
+      : consulta ? 'Clique num bloco para ver os dados e as fotos dele. Escolha um processo para ver o caminho dele na planta.'
       : 'Arraste os blocos para mudar de lugar; o quadradinho no canto do bloco selecionado muda o tamanho. Escolha um processo para ver o caminho dele na planta.') +
       '<section class="secao"><div class="vista-planta"><div class="segmento" role="group" aria-label="Tipo de vista">' +
       `<button type="button" data-acao="vista-plana" aria-pressed="${!vista3d}">Vista plana</button><button type="button" data-acao="vista-3d" aria-pressed="${vista3d}">Vista 3D</button></div>` +
-      (vista3d ? '<button type="button" class="btn btn-pequeno" data-acao="girar-3d">↻ Girar a vista</button><span class="dica">' + ['Vista da frente, pela direita', 'Vista do lado direito, pelo fundo', 'Vista do fundo, pela esquerda', 'Vista do lado esquerdo, pela frente'][rot3d] + '</span>' : '') + '</div>' +
-      (vista3d ? '' : '<div class="ferramentas-planta" role="toolbar" aria-label="Adicionar à planta">' +
-      ORDEM_ITENS.map((t) => `<button type="button" class="ferr" data-acao="item-add" data-tipo="${t}">${glifo(t)}<span>${esc(TIPOS[t].rotulo)}</span></button>`).join('') + '</div>') +
+      (vista3d ? '<button type="button" class="btn btn-pequeno" data-acao="girar-3d">↻ Girar a vista</button>' +
+        `<span class="zoom3" role="group" aria-label="Aproximar"><button type="button" data-acao="zoom3-menos" aria-label="Afastar">−</button><span id="zoom3-nivel">${Math.round(zoom3.k * 100)}%</span><button type="button" data-acao="zoom3-mais" aria-label="Aproximar">+</button><button type="button" data-acao="zoom3-ajustar" style="font-size:13px;padding:0 8px">Ajustar</button></span>` +
+        '<span class="dica">' + ['Vista da frente, pela direita', 'Vista do lado direito, pelo fundo', 'Vista do fundo, pela esquerda', 'Vista do lado esquerdo, pela frente'][rot3d] + '</span>' : '') + '</div>' +
+      (vista3d || consulta ? '' : `<details class="dobra so-edicao" id="dobra-ferr"${(dobraFerr === null ? telaLarga() : dobraFerr) ? ' open' : ''}><summary>Adicionar à planta e medidas do salão</summary><div class="dobra-corpo">` +
+        '<div class="ferramentas-planta" role="toolbar" aria-label="Adicionar à planta">' +
+        ORDEM_ITENS.map((t) => `<button type="button" class="ferr" data-acao="item-add" data-tipo="${t}">${glifo(t)}<span>${esc(TIPOS[t].rotulo)}</span></button>`).join('') + '</div>' +
+        `<div class="opcoes-planta"><label for="salao-w">Salão<input type="text" id="salao-w" data-campo="salao-w" inputmode="decimal" autocomplete="off" value="${fmt(estado.planta.salao.w)}" aria-label="Largura do salão em metros"></label>` +
+        `<label for="salao-h">por<input type="text" id="salao-h" data-campo="salao-h" inputmode="decimal" autocomplete="off" value="${fmt(estado.planta.salao.h)}" aria-label="Profundidade do salão em metros"> m</label>` +
+        `<label for="encaixar"><input type="checkbox" id="encaixar"${encaixar ? ' checked' : ''}> Encaixar a cada 0,25 m</label></div></div></details>`) +
       '<div class="opcoes-planta"><label for="rota-proc">Mostrar processo<select id="rota-proc"><option value="">Nenhum</option>' +
-      estado.processos.map((x) => `<option value="${esc(x.id)}"${x.id === procRota ? ' selected' : ''}>${esc(x.nome || 'Sem nome')}</option>`).join('') + '</select></label>' +
-      (vista3d ? '' : `<label for="salao-w">Salão<input type="text" id="salao-w" data-campo="salao-w" inputmode="decimal" autocomplete="off" value="${fmt(estado.planta.salao.w)}" aria-label="Largura do salão em metros"></label>` +
-      `<label for="salao-h">por<input type="text" id="salao-h" data-campo="salao-h" inputmode="decimal" autocomplete="off" value="${fmt(estado.planta.salao.h)}" aria-label="Profundidade do salão em metros"> m</label>` +
-      `<label for="encaixar"><input type="checkbox" id="encaixar"${encaixar ? ' checked' : ''}> Encaixar a cada 0,25 m</label>`) + '</div>' +
-      (vista3d ? '<svg id="svg-planta-3d" class="planta-3d" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Planta da loja em 3D"></svg>'
+      estado.processos.map((x) => `<option value="${esc(x.id)}"${x.id === procRota ? ' selected' : ''}>${esc(x.nome || 'Sem nome')}</option>`).join('') + '</select></label></div>' +
+      (vista3d ? '<svg id="svg-planta-3d" class="planta-3d' + (zoom3.k > 1.001 ? ' ampliada' : '') + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Planta da loja em 3D"></svg>'
         : '<svg id="svg-planta" class="planta-svg" xmlns="http://www.w3.org/2000/svg" tabindex="0" role="application" aria-label="Planta editável da loja"></svg>') +
       '<div class="legenda-cores">' + GRUPOS.filter((g) => estado.planta.itens.some((it) => grupoDe(it) === g.id)).map((g) =>
         `<span><i class="ponto" style="background:var(--g-${g.id}-f);border-color:var(--g-${g.id}-b)"></i>${esc(g.rotulo)}</span>`).join('') + '</div>' +
@@ -1001,13 +1266,16 @@ select.cel{cursor:pointer}
   }
   function telaSetores() {
     return cabPagina('Loja', 'Setores da loja', 'Onde fica cada setor, o que tem e quem atende. Edite direto nas células; as mudanças entram no manual exportado.') +
-      '<section class="secao"><div class="tabela-wrap"><table class="tabela tabela-setores"><thead><tr><th>Setor</th><th>Onde fica</th><th>O que tem ou o que faz</th><th>Quem atende</th><th>Observações</th><th class="col-acoes"><span class="sr">Ações</span></th></tr></thead><tbody>' +
+      '<section class="secao"><div class="tabela-wrap"><table class="tabela tabela-setores"><thead><tr><th>Setor</th><th>Onde fica</th><th>O que tem ou o que faz</th><th>Quem atende</th><th>Observações</th>' +
+      (MODO_SERVIDOR ? '<th class="col-acoes">Fotos</th>' : '') + '<th class="col-acoes"><span class="sr">Ações</span></th></tr></thead><tbody>' +
       (estado.setores.map((s) => {
         const id = esc(s.id), cel = (c, area, rot) =>
           `<textarea class="cel${c === 'nome' ? ' cel-titulo' : ''}" rows="1" id="s-${c}-${id}" data-campo="s-${c}" data-setor="${id}" aria-label="${rot}" maxlength="${area ? 500 : 120}">${esc(s[c])}</textarea>`;
-        return `<tr><td>${cel('nome', false, 'Setor')}</td><td>${cel('local', false, 'Onde fica')}</td><td>${cel('produtos', true, 'O que tem ou o que faz')}</td><td>${cel('atendimento', false, 'Quem atende')}</td><td>${cel('observacoes', true, 'Observações')}</td>` +
+        const nf = fotosDe(s).length;
+        return `<tr data-setor-linha="${id}"${realce === 'setor:' + s.id ? ' class="marcada"' : ''}><td>${cel('nome', false, 'Setor')}</td><td>${cel('local', false, 'Onde fica')}</td><td>${cel('produtos', true, 'O que tem ou o que faz')}</td><td>${cel('atendimento', false, 'Quem atende')}</td><td>${cel('observacoes', true, 'Observações')}</td>` +
+          (MODO_SERVIDOR ? `<td class="col-acoes"><button type="button" class="btn btn-pequeno btn-fotos" data-acao="setor-fotos" data-setor="${id}" aria-label="Fotos do setor ${esc(s.nome)}">${icone('foto')}${nf}</button></td>` : '') +
           `<td class="col-acoes"><button type="button" class="icone perigo" data-acao="setor-excluir" data-setor="${id}" aria-label="Excluir o setor ${esc(s.nome)}" title="Excluir setor">✕</button></td></tr>`;
-      }).join('') || '<tr><td colspan="6"><p class="vazio">Nenhum setor ainda.</p></td></tr>') +
+      }).join('') || `<tr><td colspan="${MODO_SERVIDOR ? 7 : 6}"><p class="vazio">Nenhum setor ainda.</p></td></tr>`) +
       '</tbody></table></div><div class="linha-botoes"><button class="btn btn-pequeno" type="button" data-acao="setor-add">Adicionar setor</button></div></section>';
   }
   function opcoesLocal(atual) {
@@ -1025,7 +1293,8 @@ select.cel{cursor:pointer}
     return '<div class="cab-proc">' + `<span class="eyebrow">Processo ${iProc} de ${estado.processos.length}</span>` +
       `<input type="text" id="p-nome-pag" data-campo="p-nome" data-proc="${esc(p.id)}" aria-label="Nome do processo" maxlength="80" autocomplete="off" value="${esc(p.nome)}">` +
       `<textarea class="cel" rows="1" id="p-obj-pag" data-campo="p-obj" data-proc="${esc(p.id)}" aria-label="Objetivo do processo" placeholder="Objetivo do processo" maxlength="200">${esc(p.objetivo || '')}</textarea>` +
-      `<div class="progresso" style="max-width:420px"><div class="barra"><i style="width:${pct}%"></i></div><span>${c.ok} de ${c.total} etapas confirmadas</span></div></div>` +
+      `<div class="progresso" style="max-width:420px"><div class="barra"><i style="width:${pct}%"></i></div><span>${c.ok} de ${c.total} etapas confirmadas</span></div>` +
+      `<div class="linha-botoes"><button class="btn btn-pequeno" type="button" data-acao="pop" data-proc="${esc(p.id)}">Imprimir o POP</button><span class="dica">Na janela de impressão, escolha Salvar como PDF para guardar o arquivo.</span></div></div>` +
       '<section class="secao"><div class="secao-cab"><div><h3>Quem participa</h3><p>Cada participante é uma coluna do fluxo; a cor é a mesma dos números na planta.</p></div>' +
       `<button class="btn btn-pequeno" type="button" data-acao="raia-add" data-proc="${esc(p.id)}">Adicionar participante</button></div><div class="participantes">` +
       p.raias.map((r, i) => {
@@ -1060,28 +1329,76 @@ select.cel{cursor:pointer}
       '<svg id="svg-mini-proc" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Caminho do processo na planta" style="max-width:640px"></svg></section>' +
       `<div class="linha-botoes"><button class="btn btn-pequeno btn-perigo" type="button" data-acao="proc-excluir" data-proc="${esc(p.id)}">Excluir este processo</button></div>`;
   }
+  // nomes já usados em "quem confirma", para sugerir ao digitar e para filtrar
+  function nomesConfirmam() {
+    const vistos = {};
+    estado.processos.forEach((p) => p.etapas.forEach((t) => { const n = String(t.respConfirma || '').trim(); if (n) vistos[semAcento(n)] = vistos[semAcento(n)] || n; }));
+    return Object.keys(vistos).map((k) => vistos[k]).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  }
+  const confereQuem = (t) => !filtroQuem || (filtroQuem === '-' ? !String(t.respConfirma || '').trim() : semAcento(t.respConfirma) === semAcento(filtroQuem));
   function telaPendencias() {
-    const total = pendentes().length;
+    const total = pendentes().length, atr = pendentes().filter((o) => atrasada(o.t)).length, nomes = nomesConfirmam();
+    if (filtroQuem && filtroQuem !== '-' && !nomes.some((n) => semAcento(n) === semAcento(filtroQuem))) filtroQuem = '';
     let corpo = '';
     estado.processos.forEach((p) => {
       const linhas = [];
-      p.etapas.forEach((t, i) => { if (filtroPend === 'todas' || t.situacao === 'confirmar') linhas.push({ t, n: i + 1 }); });
+      p.etapas.forEach((t, i) => { if ((filtroPend === 'todas' || t.situacao === 'confirmar') && confereQuem(t)) linhas.push({ t, n: i + 1 }); });
       if (!linhas.length) return;
       const pid = esc(p.id);
-      corpo += `<tr class="grupo"><th colspan="4" scope="colgroup"><button type="button" class="btn-texto" data-acao="nav" data-vista="proc:${pid}">${esc(p.nome || 'Sem nome')}</button><span>${linhas.length} ${linhas.length === 1 ? 'etapa' : 'etapas'}</span></th></tr>` +
+      corpo += `<tr class="grupo"><th colspan="6" scope="colgroup"><button type="button" class="btn-texto" data-acao="nav" data-vista="proc:${pid}">${esc(p.nome || 'Sem nome')}</button><span>${linhas.length} ${linhas.length === 1 ? 'etapa' : 'etapas'}</span></th></tr>` +
         linhas.map(({ t, n }) => {
-          const id = esc(t.id);
+          const id = esc(t.id), atr2 = atrasada(t), rot = ` da etapa ${n} de ${esc(p.nome)}`;
           return `<tr data-linha="${id}"><td class="col-num"><span class="num-etapa" style="background:${varRaia(p, t.raia)}">${n}</span></td>` +
-            `<td style="padding-top:11px"><b style="font-weight:600" data-mostra="e-titulo:${id}">${esc(t.titulo)}</b><span class="sub-cel" style="padding:2px 0 0" data-mostra="e-detalhe:${id}">${esc(t.detalhe)}</span></td>` +
-            `<td style="width:38%"><textarea class="cel" rows="1" id="e-resp-p-${id}" data-campo="e-resposta" data-proc="${pid}" data-etapa="${id}" aria-label="Resposta da equipe sobre a etapa ${n} de ${esc(p.nome)}" maxlength="600" placeholder="Anotar a resposta">${esc(t.resposta || '')}</textarea></td>` +
-            `<td class="w-sit"><select class="sit ${t.situacao === 'confirmar' ? 'confirmar' : 'ok'}" id="e-sit-p-${id}" data-campo="e-situacao" data-proc="${pid}" data-etapa="${id}" aria-label="Situação da etapa ${n} de ${esc(p.nome)}"><option value="ok"${t.situacao !== 'confirmar' ? ' selected' : ''}>Confirmado</option><option value="confirmar"${t.situacao === 'confirmar' ? ' selected' : ''}>A confirmar</option></select></td></tr>`;
+            `<td style="padding-top:11px;min-width:180px"><b style="font-weight:600" data-mostra="e-titulo:${id}">${esc(t.titulo)}</b><span class="sub-cel" style="padding:2px 0 0" data-mostra="e-detalhe:${id}">${esc(t.detalhe)}</span></td>` +
+            `<td style="width:24%"><textarea class="cel" rows="1" id="e-perg-p-${id}" data-campo="e-pergunta" data-proc="${pid}" data-etapa="${id}" aria-label="O que perguntar${rot}" maxlength="300" placeholder="O que perguntar">${esc(t.pergunta || '')}</textarea></td>` +
+            `<td style="width:26%"><textarea class="cel" rows="1" id="e-resp-p-${id}" data-campo="e-resposta" data-proc="${pid}" data-etapa="${id}" aria-label="Resposta da equipe${rot}" maxlength="600" placeholder="Anotar a resposta">${esc(t.resposta || '')}</textarea></td>` +
+            `<td style="width:170px"><div class="cel-dupla"><input type="text" class="cel" list="lista-quem" id="e-quem-conf-p-${id}" data-campo="e-respConfirma" data-proc="${pid}" data-etapa="${id}" aria-label="Quem confirma${rot}" maxlength="60" autocomplete="off" placeholder="Quem confirma" value="${esc(t.respConfirma || '')}">` +
+            `<input type="date" class="cel" id="e-prazo-p-${id}" data-campo="e-prazo" data-proc="${pid}" data-etapa="${id}" aria-label="Prazo${rot}" value="${dataValida(t.prazo) ? t.prazo : ''}">` +
+            (atr2 ? '<span class="etiqueta atrasada" style="justify-self:start">Prazo vencido</span>' : '') + '</div></td>' +
+            `<td class="w-sit"><select class="sit ${t.situacao === 'confirmar' ? 'confirmar' : 'ok'}" id="e-sit-p-${id}" data-campo="e-situacao" data-proc="${pid}" data-etapa="${id}" aria-label="Situação${rot}"><option value="ok"${t.situacao !== 'confirmar' ? ' selected' : ''}>Confirmado</option><option value="confirmar"${t.situacao === 'confirmar' ? ' selected' : ''}>A confirmar</option></select></td></tr>`;
         }).join('');
     });
-    return cabPagina('Equipe', 'Pontos a confirmar', total ? `${total} etapas ainda precisam ser validadas com a equipe. Anote a resposta e troque a situação para Confirmado.` : 'Todas as etapas estão confirmadas com a equipe.') +
-      '<section class="secao"><div class="secao-cab"><div><h3>Etapas por processo</h3><p>Use esta lista na reunião com a equipe.</p></div>' +
-      `<label class="opcoes-planta" for="filtro-pend">Mostrar<select id="filtro-pend"><option value="confirmar"${filtroPend === 'confirmar' ? ' selected' : ''}>Só as que faltam confirmar</option><option value="todas"${filtroPend === 'todas' ? ' selected' : ''}>Todas as etapas</option></select></label></div>` +
-      '<div class="tabela-wrap"><table class="tabela"><thead><tr><th class="col-num">Nº</th><th>Etapa</th><th>Resposta da equipe</th><th class="w-sit">Situação</th></tr></thead><tbody>' +
-      (corpo || '<tr><td colspan="4"><p class="vazio">Nada a mostrar com este filtro.</p></td></tr>') + '</tbody></table></div></section>';
+    return cabPagina('Equipe', 'Pontos a confirmar', total ? `${total} ${total === 1 ? 'etapa ainda precisa' : 'etapas ainda precisam'} ser validadas com a equipe` + (atr ? `, ${atr} com prazo vencido` : '') + '. Anote a pergunta, quem confirma e até quando; depois registre a resposta e troque a situação para Confirmado.' : 'Todas as etapas estão confirmadas com a equipe.') +
+      '<section class="secao"><div class="secao-cab"><div><h3>Etapas por processo</h3><p>Use esta lista na reunião com a equipe ou mande as perguntas pelo WhatsApp.</p></div>' +
+      '<button class="btn btn-pequeno" type="button" data-acao="mensagem">Montar mensagem para o WhatsApp</button></div>' +
+      '<div class="filtros">' +
+      `<label for="filtro-pend">Mostrar<select id="filtro-pend"><option value="confirmar"${filtroPend === 'confirmar' ? ' selected' : ''}>Só as que faltam confirmar</option><option value="todas"${filtroPend === 'todas' ? ' selected' : ''}>Todas as etapas</option></select></label>` +
+      `<label for="filtro-quem">Quem confirma<select id="filtro-quem"><option value="">Todos</option>${nomes.map((n) => `<option value="${esc(n)}"${semAcento(n) === semAcento(filtroQuem) ? ' selected' : ''}>${esc(n)}</option>`).join('')}<option value="-"${filtroQuem === '-' ? ' selected' : ''}>Sem responsável</option></select></label></div>` +
+      `<datalist id="lista-quem">${nomes.map((n) => `<option value="${esc(n)}"></option>`).join('')}</datalist>` +
+      '<div class="tabela-wrap"><table class="tabela tabela-pend"><thead><tr><th class="col-num">Nº</th><th>Etapa</th><th>O que perguntar</th><th>Resposta da equipe</th><th>Quem confirma e prazo</th><th class="w-sit">Situação</th></tr></thead><tbody>' +
+      (corpo || '<tr><td colspan="6"><p class="vazio">Nada a mostrar com este filtro.</p></td></tr>') + '</tbody></table></div></section>';
+  }
+  function telaImplantacao() {
+    const r = resumoImplantacao(), pct = r.usam ? Math.round(r.prontas / r.usam * 100) : 0;
+    let corpo = '';
+    estado.processos.forEach((p) => {
+      const linhas = [];
+      p.etapas.forEach((t, i) => { if (filtroImpl === 'todas' || situacaoSistema(t) !== 'nao') linhas.push({ t, n: i + 1 }); });
+      if (!linhas.length) return;
+      const pid = esc(p.id);
+      corpo += `<tr class="grupo"><th colspan="6" scope="colgroup"><button type="button" class="btn-texto" data-acao="nav" data-vista="proc:${pid}">${esc(p.nome || 'Sem nome')}</button><span>${linhas.length} ${linhas.length === 1 ? 'etapa' : 'etapas'}</span></th></tr>` +
+        linhas.map(({ t, n }) => {
+          const id = esc(t.id), s = situacaoSistema(t), rot = ` da etapa ${n} de ${esc(p.nome)}`;
+          return `<tr><td class="col-num"><span class="num-etapa" style="background:${varRaia(p, t.raia)}">${n}</span></td>` +
+            `<td style="padding-top:11px;min-width:180px"><b style="font-weight:600" data-mostra="e-titulo:${id}">${esc(t.titulo)}</b><span class="sub-cel" style="padding:2px 0 0">${esc(nomeRaia(p, t.raia))}${t.quem ? ', ' + esc(t.quem) : ''}</span></td>` +
+            `<td style="width:170px"><input type="text" class="cel" list="lista-docs" id="e-reg-i-${id}" data-campo="e-registro" data-proc="${pid}" data-etapa="${id}" aria-label="Documento${rot}" maxlength="60" autocomplete="off" placeholder="Documento" value="${esc(t.registro || '')}"></td>` +
+            `<td style="width:22%"><input type="text" class="cel" id="e-sis-i-${id}" data-campo="e-sistema" data-proc="${pid}" data-etapa="${id}" aria-label="Tela ou rotina do sistema${rot}" maxlength="80" autocomplete="off" placeholder="Por exemplo, Vendas, Pedido" value="${esc(t.sistema || '')}"></td>` +
+            `<td style="width:150px"><select class="sit-sistema" data-v="${s}" id="e-impl-i-${id}" data-campo="e-implantacao" data-proc="${pid}" data-etapa="${id}" aria-label="Situação no sistema${rot}">` +
+            Object.keys(SIT_SISTEMA).map((k) => `<option value="${k}"${k === s ? ' selected' : ''}>${SIT_SISTEMA[k]}</option>`).join('') + '</select></td>' +
+            `<td style="width:24%"><textarea class="cel" rows="1" id="e-obs-i-${id}" data-campo="e-obsSistema" data-proc="${pid}" data-etapa="${id}" aria-label="Observação sobre o sistema${rot}" maxlength="400" placeholder="Ajuste, cadastro ou teste que falta">${esc(t.obsSistema || '')}</textarea></td></tr>`;
+        }).join('');
+    });
+    const faixa = (n, rot, corN) => `<div class="faixa"><b style="color:${corN}">${n}</b><span>${rot}</span></div>`;
+    return cabPagina('Sistema', 'Implantação do sistema', 'Em cada etapa, o documento, a tela do sistema usada e em que pé está a configuração. Assim o mapeamento dos processos serve também de roteiro para a implantação.') +
+      '<section class="secao"><div class="secao-cab"><div><h3>Andamento</h3><p>' + (r.usam ? `${r.prontas} de ${r.usam} etapas que usam o sistema já foram testadas ou estão em uso.` : 'Nenhuma etapa ligada ao sistema ainda. Preencha o documento ou a tela do sistema nas etapas.') + '</p></div></div>' +
+      `<div class="progresso" style="max-width:520px"><div class="barra"><i style="width:${pct}%"></i></div><span>${pct}%</span></div>` +
+      '<div class="faixas">' + faixa(r.usam, 'usam o sistema', 'var(--tinta)') + faixa(r.configurar, 'a configurar', 'var(--aviso)') + faixa(r.configurado, 'configuradas', 'var(--acento)') +
+      faixa(r.testado, 'testadas', 'var(--ok)') + faixa(r.uso, 'em uso', 'var(--ok)') + '</div></section>' +
+      '<section class="secao"><div class="secao-cab"><div><h3>Etapas por processo</h3><p>O documento e a tela também aparecem no painel de cada etapa e no POP.</p></div>' +
+      `<div class="filtros"><label for="filtro-impl">Mostrar<select id="filtro-impl"><option value="usam"${filtroImpl === 'usam' ? ' selected' : ''}>Só as que usam o sistema</option><option value="todas"${filtroImpl === 'todas' ? ' selected' : ''}>Todas as etapas</option></select></label></div></div>` +
+      `<datalist id="lista-docs">${DOCUMENTOS.map((d) => `<option value="${esc(d)}"></option>`).join('')}</datalist>` +
+      '<div class="tabela-wrap"><table class="tabela tabela-impl"><thead><tr><th class="col-num">Nº</th><th>Etapa</th><th>Documento</th><th>Tela ou rotina do sistema</th><th>Situação no sistema</th><th>Observação</th></tr></thead><tbody>' +
+      (corpo || '<tr><td colspan="6"><p class="vazio">Nenhuma etapa usa o sistema ainda. Escolha "Todas as etapas" para preencher.</p></td></tr>') + '</tbody></table></div></section>';
   }
 
   /* ---------- painel lateral ---------- */
@@ -1098,6 +1415,7 @@ select.cel{cursor:pointer}
         (['area', 'estante', 'movel', 'caixa', 'recipiente'].indexOf(it.tipo) >= 0 ? `<p class="medida" id="i-area-g">Ocupa ${fmt(Math.round(it.w * it.h * 100) / 100)} m² do piso</p>` : '') +
         '<div class="linha-botoes"><button type="button" class="btn btn-pequeno" data-acao="item-girar">Girar 90°</button><button type="button" class="btn btn-pequeno" data-acao="item-frente">Trazer para a frente</button>' +
         '<button type="button" class="btn btn-pequeno" data-acao="item-duplicar">Duplicar</button><button type="button" class="btn btn-pequeno btn-perigo" data-acao="item-excluir">Excluir</button></div>' +
+        blocoFotos('item', it.id, fotosDe(it)) +
         '<h4>Etapas que acontecem aqui</h4>' + (aqui.length ? '<div class="lista-etapas">' + aqui.map((a) =>
           `<button type="button" class="linha-etapa" data-acao="etapa-editar" data-proc="${esc(a.p.id)}" data-etapa="${esc(a.t.id)}"><span class="num-etapa" style="background:${varRaia(a.p, a.t.raia)}">${a.n}</span><span>${esc(a.t.titulo)}<small>${esc(a.p.nome)}, ${esc(nomeRaia(a.p, a.t.raia))}</small></span></button>`).join('') + '</div>'
           : '<p class="vazio">Nenhuma etapa ligada a este lugar. Ligue pelo campo "Onde acontece" de cada etapa.</p>')
@@ -1114,8 +1432,18 @@ select.cel{cursor:pointer}
         `<div class="dupla"><label class="campo" for="e-raia-g">Participante<select id="e-raia-g" data-campo="e-raia" data-proc="${pid}" data-etapa="${id}">${p.raias.map((r) => `<option value="${esc(r.id)}" data-raia-op="${esc(r.id)}"${r.id === t.raia ? ' selected' : ''}>${esc(r.nome)}</option>`).join('')}</select></label>` +
         `<label class="campo" for="e-quem-g">Quem faz (pessoa)<input type="text" id="e-quem-g" data-campo="e-quem" data-proc="${pid}" data-etapa="${id}" maxlength="60" autocomplete="off" value="${esc(t.quem)}"></label></div>` +
         `<label class="campo" for="e-local-g">Onde acontece na planta<select id="e-local-g" data-campo="e-local" data-proc="${pid}" data-etapa="${id}">${opcoesLocal(t.local)}</select></label>` +
-        `<label class="campo" for="e-registro-g">Documento ou sistema<input type="text" id="e-registro-g" data-campo="e-registro" data-proc="${pid}" data-etapa="${id}" maxlength="60" autocomplete="off" placeholder="Por exemplo, NFC-e" value="${esc(t.registro)}"></label>` +
         `<label class="campo" for="e-detalhe-g">Como é feito<textarea id="e-detalhe-g" data-campo="e-detalhe" data-proc="${pid}" data-etapa="${id}" maxlength="600">${esc(t.detalhe)}</textarea></label>` +
+        '<h4>Sistema e documentos</h4>' +
+        `<div class="dupla"><label class="campo" for="e-registro-g">Documento<input type="text" id="e-registro-g" list="lista-docs-g" data-campo="e-registro" data-proc="${pid}" data-etapa="${id}" maxlength="60" autocomplete="off" placeholder="Por exemplo, NFC-e" value="${esc(t.registro)}"></label>` +
+        `<label class="campo" for="e-impl-g">Situação no sistema<select id="e-impl-g" data-campo="e-implantacao" data-proc="${pid}" data-etapa="${id}">${Object.keys(SIT_SISTEMA).map((k) => `<option value="${k}"${k === situacaoSistema(t) ? ' selected' : ''}>${SIT_SISTEMA[k]}</option>`).join('')}</select></label></div>` +
+        `<datalist id="lista-docs-g">${DOCUMENTOS.map((x) => `<option value="${esc(x)}"></option>`).join('')}</datalist>` +
+        `<label class="campo" for="e-sistema-g">Tela ou rotina do sistema<input type="text" id="e-sistema-g" data-campo="e-sistema" data-proc="${pid}" data-etapa="${id}" maxlength="80" autocomplete="off" placeholder="Por exemplo, Vendas, Pedido" value="${esc(t.sistema || '')}"></label>` +
+        `<label class="campo" for="e-obs-sis-g">Observação sobre o sistema<textarea id="e-obs-sis-g" data-campo="e-obsSistema" data-proc="${pid}" data-etapa="${id}" maxlength="400" placeholder="Ajuste, cadastro ou teste que falta">${esc(t.obsSistema || '')}</textarea></label>` +
+        '<h4>Validação com a equipe</h4>' +
+        `<label class="campo" for="e-perg-g">O que perguntar<textarea id="e-perg-g" data-campo="e-pergunta" data-proc="${pid}" data-etapa="${id}" maxlength="300" placeholder="A dúvida que a equipe precisa responder">${esc(t.pergunta || '')}</textarea></label>` +
+        `<div class="dupla"><label class="campo" for="e-conf-g">Quem confirma<input type="text" id="e-conf-g" list="lista-quem-g" data-campo="e-respConfirma" data-proc="${pid}" data-etapa="${id}" maxlength="60" autocomplete="off" value="${esc(t.respConfirma || '')}"></label>` +
+        `<label class="campo" for="e-prazo-g">Prazo<input type="date" id="e-prazo-g" data-campo="e-prazo" data-proc="${pid}" data-etapa="${id}" value="${dataValida(t.prazo) ? t.prazo : ''}"></label></div>` +
+        `<datalist id="lista-quem-g">${nomesConfirmam().map((x) => `<option value="${esc(x)}"></option>`).join('')}</datalist>` +
         `<label class="campo" for="e-resp-g">Resposta da equipe<textarea id="e-resp-g" data-campo="e-resposta" data-proc="${pid}" data-etapa="${id}" maxlength="600" placeholder="O que a equipe disse ao validar esta etapa">${esc(t.resposta || '')}</textarea></label>` +
         '<h4>Leva para</h4>' +
         `<div class="segmento" role="group" aria-label="Para onde a etapa leva"><button type="button" data-acao="saida-modo" data-modo="padrao" aria-pressed="${!escolher}">Etapa seguinte</button><button type="button" data-acao="saida-modo" data-modo="escolher" aria-pressed="${escolher}">Escolher destinos</button></div>` +
@@ -1130,24 +1458,94 @@ select.cel{cursor:pointer}
         `<button type="button" class="btn btn-pequeno btn-perigo" data-acao="etapa-excluir" data-proc="${pid}" data-etapa="${id}">Excluir etapa</button></div>`
     };
   }
+  const fechar = '<button type="button" class="icone" data-acao="fechar-gaveta" aria-label="Fechar painel">✕</button>';
+  function blocoFotos(tipo, id, fotos) {
+    if (!MODO_SERVIDOR) return '';
+    return '<h4>Fotos</h4>' + (fotos.length ? '<div class="fotos">' + fotos.map((f, i) =>
+      `<button type="button" class="foto carregando" data-acao="foto-ver" data-dono="${tipo}" data-dono-id="${esc(id)}" data-i="${i}" aria-label="Abrir a foto ${i + 1}${f.legenda ? ': ' + esc(f.legenda) : ''}"><img alt="" data-foto="${esc(f.arquivo)}"></button>`).join('') + '</div>'
+      : '<p class="vazio">Nenhuma foto ainda.</p>') +
+      `<div class="linha-botoes so-edicao"><button type="button" class="btn btn-pequeno btn-fotos" data-acao="foto-add" data-dono="${tipo}" data-dono-id="${esc(id)}"${enviandoFotos ? ' disabled' : ''}>${icone('foto')}${enviandoFotos ? 'Enviando a foto…' : 'Adicionar foto'}</button>` +
+      '<span class="dica">No celular, dá para tirar a foto na hora.</span></div>';
+  }
+  function painelSetor(s) {
+    const linha = (rot, v) => (v ? `<p style="margin:0"><span class="dica">${rot}</span><br>${esc(v)}</p>` : '');
+    return {
+      cab: `<div><small>Setor</small><h3>${esc(s.nome || 'Sem nome')}</h3></div>${fechar}`,
+      corpo: linha('Onde fica', s.local) + linha('O que tem ou o que faz', s.produtos) + linha('Quem atende', s.atendimento) + linha('Observações', s.observacoes) + blocoFotos('setor', s.id, fotosDe(s))
+    };
+  }
+  function resumoEstado(e) {
+    const etapas = e.processos.reduce((n, p) => n + (p.etapas || []).length, 0), pend = e.processos.reduce((n, p) => n + (p.etapas || []).filter((t) => t.situacao === 'confirmar').length, 0);
+    return e.planta.itens.length + ' itens na planta, ' + e.setores.length + ' setores, ' + e.processos.length + (e.processos.length === 1 ? ' processo' : ' processos') + ' com ' + etapas + ' etapas, das quais ' + pend + ' a confirmar.';
+  }
+  function painelVersoes() {
+    const v = versoes, pr = v.previa;
+    return {
+      cab: `<div><small>Histórico do GitHub</small><h3>Versões anteriores</h3></div>${fechar}`,
+      corpo: '<p class="dica">Cada salvamento fica guardado. Abra uma versão para ver o resumo dela e, se quiser, trazê-la de volta. Restaurar vira um salvamento novo, e a versão de agora continua no histórico.</p>' +
+        (pr ? `<div class="previa"><b>Versão de ${esc(dataBR(pr.data))}</b>` + (pr.estado ? `<p>${esc(resumoEstado(pr.estado))}</p><p class="dica">Agora: ${esc(resumoEstado(estado))}</p>` +
+          '<div class="linha-botoes"><button type="button" class="btn btn-primario btn-pequeno" data-acao="versao-restaurar">Restaurar esta versão</button><button type="button" class="btn btn-pequeno" data-acao="versao-fechar">Voltar à lista</button></div>'
+          : '<p>Carregando a versão…</p>') + '</div>' : '') +
+        (v.erro ? `<p class="erro" style="color:var(--perigo);margin:0">${esc(v.erro)}</p>` : '') +
+        '<div class="lista-etapas">' + v.lista.map((x, i) => `<div class="versao${i === 0 ? ' atual' : ''}"><b>${esc(dataBR(x.data))}</b>` +
+          `<button type="button" class="btn btn-pequeno" data-acao="versao-ver" data-sha="${esc(x.sha)}" data-data="${esc(x.data || '')}">Ver</button>${i === 0 ? '<small>Salvamento mais recente</small>' : ''}</div>`).join('') + '</div>' +
+        (v.carregando ? '<p class="dica">Carregando…</p>' : v.mais && v.lista.length ? '<div class="linha-botoes"><button type="button" class="btn btn-pequeno" data-acao="versoes-mais">Carregar mais</button></div>' : '') +
+        (!v.carregando && !v.lista.length && !v.erro ? '<p class="vazio">Nenhum salvamento encontrado.</p>' : '')
+    };
+  }
+  function montarMensagem() {
+    const nome = filtroQuem && filtroQuem !== '-' ? filtroQuem : '', linhas = [];
+    let k = 0;
+    estado.processos.forEach((p) => {
+      const lista = p.etapas.filter((t) => t.situacao === 'confirmar' && confereQuem(t));
+      if (!lista.length) return;
+      linhas.push('', '*' + (p.nome || 'Sem nome') + '*');
+      lista.forEach((t) => {
+        k++;
+        const perg = String(t.pergunta || '').trim() || String(t.detalhe || '').trim();
+        linhas.push(k + '. ' + (t.titulo || 'Sem título') + (perg ? ': ' + perg : '') + (dataValida(t.prazo) ? ' (até ' + diaMes(t.prazo) + ')' : ''));
+      });
+    });
+    if (!k) return '';
+    return (nome ? 'Olá, ' + nome + '!' : 'Olá!') + ' Para fecharmos o mapeamento dos processos da Paiol, precisamos confirmar ' + (k === 1 ? 'um ponto:' : 'alguns pontos:') + '\n' + linhas.join('\n') +
+      '\n\nPode responder aqui mesmo, citando o número de cada ponto. Obrigado!';
+  }
+  const linkWhats = (texto) => 'https://wa.me/?text=' + encodeURIComponent(texto);
+  function painelMensagem() {
+    const quem = filtroQuem && filtroQuem !== '-' ? filtroQuem : '';
+    return {
+      cab: `<div><small>Pontos a confirmar</small><h3>Mensagem para o WhatsApp</h3></div>${fechar}`,
+      corpo: (textoMensagem ? `<p class="dica">${quem ? 'Só os pontos que ' + esc(quem) + ' confirma.' : 'Todos os pontos que faltam confirmar.'} Ajuste o texto se quiser; o WhatsApp abre com ele pronto para escolher o contato.</p>` +
+        `<label class="campo" for="texto-mensagem">Texto<textarea class="mensagem" id="texto-mensagem">${esc(textoMensagem)}</textarea></label>` +
+        `<div class="linha-botoes"><a class="btn btn-primario" id="link-whats" href="${esc(linkWhats(textoMensagem))}" target="_blank" rel="noopener">Abrir no WhatsApp</a>` +
+        '<button type="button" class="btn" data-acao="msg-copiar">Copiar o texto</button><button type="button" class="btn btn-texto" data-acao="msg-refazer">Refazer o texto</button></div><p class="dica" id="msg-copiado" role="status"></p>'
+        : '<p class="vazio">Nenhum ponto a confirmar' + (quem ? ' para ' + esc(quem) : '') + '.</p>')
+    };
+  }
   function renderGaveta() {
     const g = $('gaveta');
     let conteudo = null;
     if (gaveta && gaveta.tipo === 'item') { const it = itemDe(gaveta.id); if (it) conteudo = painelItem(it); }
     if (gaveta && gaveta.tipo === 'etapa') { const p = procDe(gaveta.proc), t = etapaDe(p, gaveta.id); if (t) conteudo = painelEtapa(p, t); }
+    if (gaveta && gaveta.tipo === 'setor') { const s = estado.setores.find((x) => x.id === gaveta.id); if (s) conteudo = painelSetor(s); }
+    if (gaveta && gaveta.tipo === 'versoes') conteudo = painelVersoes();
+    if (gaveta && gaveta.tipo === 'mensagem') conteudo = painelMensagem();
     if (!conteudo) gaveta = null;
     g.classList.toggle('aberta', !!conteudo);
+    g.setAttribute('aria-label', gaveta && (gaveta.tipo === 'versoes' || gaveta.tipo === 'mensagem' || consulta) ? 'Painel' : 'Painel de edição');
     if (conteudo) { g.removeAttribute('inert'); $('gaveta-cab').innerHTML = conteudo.cab; $('gaveta-corpo').innerHTML = conteudo.corpo; }
     else { g.setAttribute('inert', ''); }
     document.body.classList.toggle('com-gaveta', !!conteudo);
+    if (consulta) travarCampos($('gaveta'));
+    carregarFotos($('gaveta'));
   }
 
   /* ---------- renderização ---------- */
   function desenharTela() {
-    if (vista === 'geral') pintarSvg('svg-mini', desenhar({ mini: true }));
+    if (vista === 'geral') pintarSvg('svg-mini3d', desenhar3D({ rot: 0, resumo: true }));
     if (vista === 'planta') {
       const marcado = gaveta && gaveta.tipo === 'etapa' && gaveta.proc === procRota ? gaveta.id : null;
-      if (vista3d) pintarSvg('svg-planta-3d', desenhar3D({ rot: rot3d, sel: selItem, proc: procDe(procRota), marcado }));
+      if (vista3d) { const r = desenhar3D({ rot: rot3d, sel: selItem, proc: procDe(procRota), marcado }); base3 = r.vb; pintarSvg('svg-planta-3d', r); aplicarZoom3(); }
       else pintarSvg('svg-planta', desenhar({ sel: selItem, proc: procDe(procRota), marcado }));
     }
     const p = procAberto();
@@ -1166,17 +1564,67 @@ select.cel{cursor:pointer}
   function renderPrincipal() {
     const p = procAberto();
     if (vista.indexOf('proc:') === 0 && !p) vista = 'geral';
-    $('principal').innerHTML = vista === 'planta' ? telaPlanta() : vista === 'setores' ? telaSetores() : vista === 'pendencias' ? telaPendencias() : p ? telaProcesso(p) : telaGeral();
+    if (['geral', 'planta', 'setores', 'pendencias', 'processos', 'implantacao'].indexOf(vista) < 0 && !p) vista = 'geral';
+    $('principal').innerHTML = vista === 'planta' ? telaPlanta() : vista === 'setores' ? telaSetores() : vista === 'pendencias' ? telaPendencias() :
+      vista === 'processos' ? telaProcessos() : vista === 'implantacao' ? telaImplantacao() : p ? telaProcesso(p) : telaGeral();
+    if (consulta) travarCampos($('principal'));
     $('principal').querySelectorAll('textarea.cel').forEach(autoAltura);
     desenharTela();
   }
+  // modo consulta: os campos mostram o conteúdo, mas não deixam mudar
+  function travarCampos(raiz) {
+    if (!raiz) return;
+    raiz.querySelectorAll('[data-campo]').forEach((el) => {
+      if (el.tagName === 'SELECT' || el.type === 'date') el.disabled = true;
+      else el.readOnly = true;
+      if (el.placeholder && !el.value) el.placeholder = '';
+    });
+  }
+  /* ---------- 3D: aproximar e andar ---------- */
+  function aplicarZoom3() {
+    const svg = $('svg-planta-3d');
+    if (!svg || !base3) return;
+    const k = zoom3.k, w = base3.w / k, h = base3.h / k;
+    const cx = base3.x + base3.w / 2 + zoom3.x, cy = base3.y + base3.h / 2 + zoom3.y;
+    svg.setAttribute('viewBox', [cx - w / 2, cy - h / 2, w, h].map(r2).join(' '));
+    svg.classList.toggle('ampliada', k > 1.001);
+    // os nomes crescem menos que o desenho, para não cobrir a loja quando aproxima
+    svg.style.setProperty('--esc3', r2(Math.pow(k, -0.55)));
+    const n = $('zoom3-nivel'); if (n) n.textContent = Math.round(k * 100) + '%';
+  }
+  function limitarZoom3() {
+    if (!base3) return;
+    zoom3.k = limitar(zoom3.k, 1, 6);
+    const mx = base3.w / 2 * (1 - 1 / zoom3.k), my = base3.h / 2 * (1 - 1 / zoom3.k);
+    zoom3.x = limitar(zoom3.x, -mx, mx); zoom3.y = limitar(zoom3.y, -my, my);
+  }
+  // aproxima mantendo parado o ponto (px, py) da tela, em unidades do desenho
+  function zoomEm(fator, px, py) {
+    if (!base3) return;
+    const k0 = zoom3.k, k1 = limitar(k0 * fator, 1, 6);
+    const cx = base3.x + base3.w / 2 + zoom3.x, cy = base3.y + base3.h / 2 + zoom3.y;
+    if (px == null) { px = cx; py = cy; }
+    zoom3.k = k1;
+    zoom3.x = px - (px - cx) * k0 / k1 - (base3.x + base3.w / 2);
+    zoom3.y = py - (py - cy) * k0 / k1 - (base3.y + base3.h / 2);
+    if (k1 <= 1.001) zoom3 = { k: 1, x: 0, y: 0 };
+    limitarZoom3(); aplicarZoom3();
+  }
   function medirTopo() { const t = document.querySelector('.topo'); if (t) document.documentElement.style.setProperty('--alt-topo', t.offsetHeight + 'px'); }
-  function renderStatusServidor() { const b = $('btn-sair'); if (b) b.hidden = !MODO_SERVIDOR; }
+  function renderStatusServidor() {
+    const b = $('btn-sair'); if (b) b.hidden = !MODO_SERVIDOR;
+    const v = $('btn-versoes'), comVersoes = MODO_SERVIDOR && dadosCarregados && !consulta; if (v) v.hidden = !comVersoes;
+    const mv = $('menu-versoes'); if (mv) mv.hidden = !comVersoes;
+    const ms = $('menu-sair'); if (ms) ms.hidden = !MODO_SERVIDOR;
+    document.body.classList.toggle('consulta', consulta);
+  }
   function renderStatus() {
     renderStatusServidor();
     const el = $('status'), sujo = chave(estado) !== chave(salvo);
     let tipo, txt;
-    if (salvando) { tipo = 'salvando'; txt = 'Salvando'; }
+    if (consulta) { tipo = 'neutro'; txt = 'Somente consulta'; }
+    else if (enviandoFotos) { tipo = 'salvando'; txt = 'Enviando foto'; }
+    else if (salvando) { tipo = 'salvando'; txt = 'Salvando'; }
     else if (gerando) { tipo = 'salvando'; txt = 'Gerando o manual'; }
     else if (MODO_SERVIDOR && autoParado && sujo) { tipo = 'aviso'; txt = 'Não salvo'; }
     else if (somenteLeitura) { tipo = 'neutro'; txt = sujo ? 'Somente visualização; mudanças só neste navegador' : 'Somente visualização'; }
@@ -1186,6 +1634,7 @@ select.cel{cursor:pointer}
     else { tipo = 'ok'; txt = 'Salvo em ' + dataBR(salvo.salvoEm); }
     el.dataset.tipo = tipo;
     el.textContent = txt;
+    el.title = txt;
     $('btn-salvar').disabled = salvando || somenteLeitura || salvarIndisponivel || (!sujo && !!salvo.salvoEm);
     $('btn-desfazer').disabled = historico.length === 0;
     $('btn-exportar').hidden = !nsDownloads;
@@ -1211,10 +1660,233 @@ select.cel{cursor:pointer}
   }
   function esconderAviso() { const el = $('aviso'); el.hidden = true; el.innerHTML = ''; }
 
+  /* ---------- busca ---------- */
+  function trecho(texto, partes) {
+    const s = String(texto || ''), n = semAcento(s);
+    let i = -1;
+    partes.some((p) => { i = n.indexOf(p); return i >= 0; });
+    if (i < 0 || s.length <= 70) return s.slice(0, 70);
+    const ini = Math.max(0, i - 25);
+    return (ini ? '…' : '') + s.slice(ini, ini + 70) + (ini + 70 < s.length ? '…' : '');
+  }
+  function resultadosBusca(termo) {
+    const q = semAcento(termo).trim();
+    if (q.length < 2) return [];
+    const partes = q.split(/\s+/).filter(Boolean), casa = (txt) => { const s = semAcento(txt); return partes.every((p) => s.indexOf(p) >= 0); };
+    const out = [];
+    estado.planta.itens.forEach((it) => {
+      if (it.tipo !== 'porta' && casa(it.nome)) out.push({ tipo: 'item', id: it.id, rot: 'Planta', titulo: it.nome, sub: ((GRUPOS.find((g) => g.id === grupoDe(it)) || {}).rotulo) || TIPOS[it.tipo].rotulo });
+    });
+    estado.setores.forEach((s) => {
+      if (casa([s.nome, s.local, s.produtos, s.atendimento, s.observacoes].join(' '))) out.push({ tipo: 'setor', id: s.id, rot: 'Setor', titulo: s.nome || 'Sem nome', sub: trecho(casa(s.nome) ? s.local || s.produtos : [s.produtos, s.local, s.observacoes].join('. '), partes) });
+    });
+    estado.processos.forEach((p) => {
+      if (casa(p.nome)) out.push({ tipo: 'proc', id: p.id, rot: 'Processo', titulo: p.nome || 'Sem nome', sub: p.objetivo || '' });
+      p.etapas.forEach((t, i) => {
+        if (casa([t.titulo, t.detalhe, t.registro, t.sistema, t.quem, t.pergunta, t.resposta].join(' '))) out.push({ tipo: 'etapa', proc: p.id, id: t.id, rot: 'Etapa', titulo: (i + 1) + '. ' + (t.titulo || 'Sem título'), sub: p.nome || '' });
+      });
+    });
+    return out.slice(0, 14);
+  }
+  function renderBusca(mostrar) {
+    const lista = $('busca-lista'), campo = $('busca-campo');
+    if (!lista || !campo) return;
+    const termo = campo.value;
+    if (!mostrar || semAcento(termo).trim().length < 2) { lista.hidden = true; lista.innerHTML = ''; campo.setAttribute('aria-expanded', 'false'); return; }
+    lista.innerHTML = busca.itens.length ? busca.itens.map((r, i) => `<button type="button" role="option" id="res-${i}" data-acao="busca-ir" data-i="${i}" aria-selected="${i === busca.indice}">` +
+      `<span class="tipo-res">${esc(r.rot)}</span><b>${esc(r.titulo)}</b><small>${esc(r.sub || '')}</small></button>`).join('') : '<p>Nada encontrado para essa busca.</p>';
+    lista.hidden = false;
+    campo.setAttribute('aria-expanded', 'true');
+    if (busca.indice >= 0) campo.setAttribute('aria-activedescendant', 'res-' + busca.indice); else campo.removeAttribute('aria-activedescendant');
+  }
+  function fecharBusca(limpar) {
+    const campo = $('busca-campo');
+    if (limpar && campo) campo.value = '';
+    busca = { itens: [], indice: -1 };
+    renderBusca(false);
+    const topo = document.querySelector('.topo'); if (topo) topo.classList.remove('busca-aberta');
+  }
+  function acender(id) {
+    realce = id;
+    clearTimeout(timerRealce);
+    timerRealce = setTimeout(() => { realce = null; }, 4200);
+  }
+  function irParaResultado(r) {
+    fecharBusca(true);
+    if (!r) return;
+    menuAberto = false;
+    if (r.tipo === 'item') {
+      vista = 'planta'; selItem = r.id; gaveta = { tipo: 'item', id: r.id }; acender(r.id); render();
+      const alvo = document.querySelector(vista3d ? '#svg-planta-3d' : '#svg-planta [data-id="' + (window.CSS && CSS.escape ? CSS.escape(r.id) : r.id) + '"]');
+      if (alvo) try { alvo.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) { /* ignora */ }
+    } else if (r.tipo === 'setor') {
+      vista = 'setores'; gaveta = null; selItem = null; acender('setor:' + r.id); render();
+      const linhaS = document.querySelector('[data-setor-linha="' + r.id + '"]');
+      if (linhaS) try { linhaS.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) { /* ignora */ }
+    } else if (r.tipo === 'proc') irPara('proc:' + r.id);
+    else if (r.tipo === 'etapa') { vista = 'proc:' + r.proc; abrirEtapa(r.proc, r.id); }
+  }
+
+  /* ---------- fotos (só no sistema online) ---------- */
+  function donoDe(d) { return d && d.tipo === 'item' ? itemDe(d.id) : d && d.tipo === 'setor' ? estado.setores.find((s) => s.id === d.id) || null : null; }
+  function urlFoto(arquivo) {
+    if (!fotoUrls[arquivo]) {
+      fotoUrls[arquivo] = fetch(CONFIG.servidor + '?foto=' + encodeURIComponent(arquivo), { headers: cabecalhoSenha() })
+        .then((r) => { if (!r.ok) throw new Error('foto'); return r.blob(); })
+        .then((b) => URL.createObjectURL(b));
+      fotoUrls[arquivo].catch(() => { /* tratado em quem usa */ });
+    }
+    return fotoUrls[arquivo];
+  }
+  function carregarFotos(raiz) {
+    if (!MODO_SERVIDOR || !raiz) return;
+    raiz.querySelectorAll('img[data-foto]').forEach((img) => {
+      if (img.getAttribute('src')) return;
+      const caixa = img.parentElement;
+      urlFoto(img.dataset.foto).then((u) => { img.src = u; if (caixa) caixa.classList.remove('carregando'); })
+        .catch(() => { if (caixa) { caixa.classList.remove('carregando'); caixa.title = 'Foto indisponível'; } img.alt = 'Foto indisponível'; });
+    });
+  }
+  async function reduzirImagem(arq) {
+    const url = URL.createObjectURL(arq);
+    try {
+      const img = new Image();
+      await new Promise((ok, falha) => { img.onload = ok; img.onerror = falha; img.src = url; });
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (!w || !h) throw new Error('imagem');
+      const k = Math.min(1, 1600 / Math.max(w, h));
+      w = Math.round(w * k); h = Math.round(h * k);
+      const tela = document.createElement('canvas');
+      tela.width = w; tela.height = h;
+      const ctx = tela.getContext('2d');
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); ctx.drawImage(img, 0, 0, w, h);
+      let q = 0.82, blob = await new Promise((ok) => tela.toBlob(ok, 'image/jpeg', q));
+      while (blob && blob.size > 1.8 * 1024 * 1024 && q > 0.5) { q -= 0.12; blob = await new Promise((ok) => tela.toBlob(ok, 'image/jpeg', q)); }
+      if (!blob) throw new Error('imagem');
+      return blob;
+    } finally { URL.revokeObjectURL(url); }
+  }
+  const paraBase64 = (blob) => new Promise((ok, falha) => { const l = new FileReader(); l.onload = () => ok(String(l.result).split(',')[1] || ''); l.onerror = falha; l.readAsDataURL(blob); });
+  let fotoDono = null;
+  async function enviarFotos(arquivos) {
+    const dono = fotoDono;
+    if (!dono || !arquivos.length || consulta) return;
+    enviandoFotos++; renderStatus(); renderGaveta();
+    let falhas = 0, motivo = '';
+    for (const arq of arquivos) {
+      try {
+        const blob = await reduzirImagem(arq), nome = 'fotos/' + novoId() + '.jpg';
+        const r = await fetch(CONFIG.servidor + '?foto=' + encodeURIComponent(nome), { method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, cabecalhoSenha()), body: JSON.stringify({ dados: await paraBase64(blob) }) });
+        if (!r.ok) { const d = await r.json().catch(() => ({})); motivo = r.status === 413 ? 'A foto ficou grande demais mesmo depois de reduzida.' : mensagemServidor(d, r.status); throw new Error('envio'); }
+        fotoUrls[nome] = Promise.resolve(URL.createObjectURL(blob));
+        alterar(() => { const o = donoDe(dono); if (o) o.fotos = fotosDe(o).concat([{ arquivo: nome, legenda: '' }]); });
+      } catch (e) { falhas++; if (!motivo) motivo = 'Confira se o arquivo é uma imagem e a conexão com a internet.'; }
+    }
+    enviandoFotos--; renderStatus(); renderGaveta();
+    if (falhas) mostrarAviso((falhas === 1 ? 'Uma foto não foi enviada. ' : falhas + ' fotos não foram enviadas. ') + motivo);
+  }
+  function renderVisor() {
+    const v = $('visor');
+    if (!visorAberto) { v.hidden = true; v.innerHTML = ''; return; }
+    const fotos = fotosDe(donoDe(visorAberto));
+    if (!fotos.length) { visorAberto = null; renderVisor(); return; }
+    const i = limitar(visorAberto.i, 0, fotos.length - 1), f = fotos[i];
+    visorAberto.i = i;
+    v.innerHTML = `<img id="visor-img" alt="${esc(f.legenda || 'Foto')}">` + '<div class="visor-barra">' +
+      (fotos.length > 1 ? `<button type="button" class="btn btn-pequeno" data-acao="visor-ant" aria-label="Foto anterior">‹</button><span>${i + 1} de ${fotos.length}</span><button type="button" class="btn btn-pequeno" data-acao="visor-prox" aria-label="Próxima foto">›</button>` : '') +
+      (consulta ? (f.legenda ? `<span>${esc(f.legenda)}</span>` : '') :
+        `<input type="text" id="visor-legenda" maxlength="120" autocomplete="off" placeholder="Legenda da foto" aria-label="Legenda da foto" value="${esc(f.legenda || '')}"><button type="button" class="btn btn-pequeno" data-acao="foto-tirar">Tirar da lista</button>`) +
+      '<button type="button" class="btn btn-pequeno" data-acao="visor-fechar">Fechar</button></div>';
+    v.hidden = false;
+    urlFoto(f.arquivo).then((u) => { const im = $('visor-img'); if (im) im.src = u; }).catch(() => { const im = $('visor-img'); if (im) im.alt = 'Foto indisponível'; });
+  }
+
+  /* ---------- versões anteriores (histórico do GitHub) ---------- */
+  async function carregarVersoes() {
+    if (versoes.carregando || !versoes.mais) return;
+    versoes.carregando = true; versoes.erro = ''; renderGaveta();
+    try {
+      const r = await fetch(CONFIG.servidor + '?versoes=1&pagina=' + (versoes.pagina + 1), { headers: cabecalhoSenha(), cache: 'no-store' });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) versoes.erro = mensagemServidor(d, r.status);
+      else { versoes.pagina++; versoes.lista = versoes.lista.concat(Array.isArray(d.versoes) ? d.versoes : []); versoes.mais = !!d.mais; }
+    } catch (e) { versoes.erro = 'Sem conexão com o servidor. Confira a internet e tente de novo.'; }
+    versoes.carregando = false;
+    if (gaveta && gaveta.tipo === 'versoes') renderGaveta();
+  }
+  async function verVersao(sha, data) {
+    versoes.previa = { sha, data, estado: null }; versoes.erro = ''; renderGaveta();
+    try {
+      const r = await fetch(CONFIG.servidor + '?versao=' + encodeURIComponent(sha), { headers: cabecalhoSenha(), cache: 'no-store' });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !valido(d.estado)) throw new Error(r.ok ? 'Essa versão não pôde ser lida.' : mensagemServidor(d, r.status));
+      if (versoes.previa && versoes.previa.sha === sha) versoes.previa.estado = d.estado;
+    } catch (e) { versoes.previa = null; versoes.erro = e && e.message && e.message.length > 12 ? e.message : 'Não foi possível abrir essa versão.'; }
+    if (gaveta && gaveta.tipo === 'versoes') { renderGaveta(); const c = document.querySelector('.gaveta-corpo'); if (c) c.scrollTop = 0; }
+  }
+  function restaurarVersao() {
+    const pr = versoes.previa;
+    if (!pr || !pr.estado || consulta) return;
+    alterar(() => {
+      estado.planta = clonar(pr.estado.planta); estado.setores = clonar(pr.estado.setores); estado.processos = clonar(pr.estado.processos);
+      gaveta = null; corrigirSelecao();
+    });
+    versoes.previa = null;
+    mostrarAviso('A versão de ' + dataBR(pr.data) + ' foi restaurada e vai ser salva em seguida. Se foi sem querer, use Desfazer.');
+  }
+
+  /* ---------- mensagem e POP ---------- */
+  async function copiar(texto) {
+    let ok = false;
+    try { if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(texto); ok = true; } } catch (e) { ok = false; }
+    if (!ok) {
+      const t = $('texto-mensagem');
+      if (t) { t.focus(); t.select(); try { ok = document.execCommand('copy'); } catch (e) { ok = false; } }
+    }
+    const aviso = $('msg-copiado');
+    if (aviso) aviso.textContent = ok ? 'Texto copiado. Cole na conversa do WhatsApp.' : 'Não deu para copiar sozinho. Selecione o texto e copie.';
+  }
+  function htmlPop(p, i, total) {
+    const c = contagem(p), nome = p.nome || 'Sem nome', corR = (t) => PALETA_CLARA['r' + (indiceRaia(p, t.raia) % 6)];
+    const linhas = p.etapas.map((t, k) => '<tr><td class="n"><span style="background:' + corR(t) + '">' + (k + 1) + '</span></td>' +
+      '<td><b>' + esc(t.titulo || 'Sem título') + '</b>' + (t.tipo !== 'etapa' ? ' (' + TIPOS_ETAPA[t.tipo].toLowerCase() + ')' : '') + (t.detalhe ? '<span class="det">' + esc(t.detalhe) + '</span>' : '') + '</td>' +
+      '<td>' + esc(nomeRaia(p, t.raia)) + (t.quem ? '<span class="det">' + esc(t.quem) + '</span>' : '') + '</td>' +
+      '<td>' + esc(nomeLocal(t.local) || 'Fora da planta') + '</td>' +
+      '<td>' + esc(t.registro || '') + (t.sistema ? '<span class="det">Tela: ' + esc(t.sistema) + '</span>' : '') + '</td>' +
+      '<td>' + esc(textoProxima(p, t)) + '</td>' +
+      '<td>' + (t.situacao === 'confirmar' ? '<span class="pend">A confirmar</span>' : 'Confirmada') + '</td></tr>').join('');
+    let fig = '';
+    if (p.etapas.some((t) => itemDe(t.local))) {
+      const r = exportar(() => desenhar({ proc: p, pref: 'pop' + i + '-' }));
+      fig = '<div class="pop-fig"><p>Figura ' + (i + 1) + ': Caminho do processo ' + esc(nome) + ' na planta da loja</p>' +
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + [r.vb.x, r.vb.y, r.vb.w, r.vb.h].map(r2).join(' ') + '">' + r.corpo + '</svg>' +
+        '<div class="pop-quem" style="margin-top:6px">' + p.raias.map((x) => '<span><i style="background:' + PALETA_CLARA['r' + (indiceRaia(p, x.id) % 6)] + '"></i>' + esc(x.nome) + '</span>').join('') + '</div>' +
+        '<small>Fonte: elaboração própria.</small></div>';
+    }
+    return '<section class="pop"><header class="pop-cab"><div><small>Procedimento Operacional Padrão</small><h1>' + esc(nome) + '</h1>' + (p.objetivo ? '<p>' + esc(p.objetivo) + '</p>' : '') + '</div>' +
+      '<div class="pop-id"><b>POP ' + (i + 1) + ' de ' + total + '</b>Paiol<br>' + c.ok + ' de ' + c.total + ' etapas confirmadas</div></header>' +
+      '<h2>Quem participa</h2><div class="pop-quem">' + p.raias.map((x) => '<span><i style="background:' + PALETA_CLARA['r' + (indiceRaia(p, x.id) % 6)] + '"></i>' + esc(x.nome) + '</span>').join('') + '</div>' +
+      '<h2>Passo a passo</h2><p style="margin:0 0 4px;font-size:10pt;font-weight:700">Quadro ' + (i + 1) + ': Passo a passo do processo ' + esc(nome) + '</p>' +
+      '<table class="pop-tab"><thead><tr><th class="n">Nº</th><th>O que é feito</th><th>Quem faz</th><th>Onde</th><th>Documento e sistema</th><th>Segue para</th><th>Situação</th></tr></thead><tbody>' + linhas + '</tbody></table>' +
+      '<small style="display:block;font-size:9pt;color:#4a564e;margin-top:4px">Fonte: elaboração própria.</small>' + fig +
+      '<div class="pop-assin"><div>Elaborado por</div><div>Aprovado por</div></div></section>';
+  }
+  function imprimirPop(lista) {
+    if (!lista.length) { mostrarAviso('Nenhum processo para imprimir.'); return; }
+    const el = $('impressao');
+    el.innerHTML = lista.map((p, i) => htmlPop(p, i, lista.length)).join('');
+    document.body.classList.add('imprimindo');
+    const fim = () => { document.body.classList.remove('imprimindo'); el.innerHTML = ''; window.removeEventListener('afterprint', fim); };
+    window.addEventListener('afterprint', fim);
+    try { window.print(); }
+    catch (e) { fim(); mostrarAviso('A impressão não abriu nesta visualização. Abra o sistema pelo endereço online ou pelo arquivo no computador e tente de novo.'); }
+  }
+
   /* ---------- alterações e histórico ---------- */
   function registrar(antes) { historico.push(antes); if (historico.length > 100) historico.shift(); }
   function depoisDeMudar() { gravarRascunho(); renderStatus(); agendarAutoSalvar(); }
   function alterar(fn) {
+    if (consulta) { render(); return; }
     const antes = JSON.stringify(estado);
     fn();
     if (antes !== JSON.stringify(estado)) { registrar(antes); depoisDeMudar(); }
@@ -1232,7 +1904,7 @@ select.cel{cursor:pointer}
     if (gaveta && gaveta.tipo === 'etapa' && !etapaDe(procDe(gaveta.proc), gaveta.id)) gaveta = null;
   }
   function desfazer() {
-    if (!historico.length) return;
+    if (!historico.length || consulta) return;
     estado = JSON.parse(historico.pop());
     corrigirSelecao(); depoisDeMudar(); render();
   }
@@ -1250,8 +1922,12 @@ select.cel{cursor:pointer}
   }
 
   /* ---------- ações ---------- */
+  const SO_EDICAO = ['desfazer', 'salvar', 'item-add', 'item-girar', 'item-frente', 'item-duplicar', 'item-excluir', 'proc-novo', 'proc-excluir', 'raia-add', 'raia-subir', 'raia-descer',
+    'raia-excluir', 'etapa-add', 'etapa-subir', 'etapa-descer', 'etapa-duplicar', 'etapa-excluir', 'saida-modo', 'saida-add', 'saida-remover', 'setor-add', 'setor-excluir',
+    'foto-add', 'foto-tirar', 'versoes', 'versoes-mais', 'versao-ver', 'versao-restaurar'];
   function acao(nome, el) {
     const d = el ? el.dataset : {};
+    if (consulta && SO_EDICAO.indexOf(nome) >= 0) return;
     const p = d.proc ? procDe(d.proc) : (gaveta && gaveta.proc ? procDe(gaveta.proc) : null);
     const t = p && d.etapa ? etapaDe(p, d.etapa) : (gaveta && gaveta.tipo === 'etapa' ? etapaDe(procDe(gaveta.proc), gaveta.id) : null);
     const it = itemDe(selItem);
@@ -1260,7 +1936,45 @@ select.cel{cursor:pointer}
       case 'desfazer': desfazer(); break;
       case 'vista-plana': vista3d = false; render(); break;
       case 'vista-3d': vista3d = true; render(); break;
-      case 'girar-3d': rot3d = (rot3d + 1) % 4; render(); break;
+      case 'abrir-3d': vista3d = true; irPara('planta'); break;
+      case 'girar-3d': rot3d = (rot3d + 1) % 4; zoom3 = { k: 1, x: 0, y: 0 }; render(); break;
+      case 'zoom3-mais': zoomEm(1.5); break;
+      case 'zoom3-menos': zoomEm(1 / 1.5); break;
+      case 'zoom3-ajustar': zoom3 = { k: 1, x: 0, y: 0 }; aplicarZoom3(); break;
+      case 'abrir-busca': {
+        const topo = document.querySelector('.topo');
+        if (topo) topo.classList.toggle('busca-aberta');
+        const c = $('busca-campo'); if (c && topo && topo.classList.contains('busca-aberta')) c.focus();
+        break;
+      }
+      case 'busca-ir': irParaResultado(busca.itens[Number(d.i)]); break;
+      case 'pop': if (p) imprimirPop([p]); break;
+      case 'pop-todos': menuAberto = false; renderStatus(); imprimirPop(estado.processos); break;
+      case 'mensagem': textoMensagem = montarMensagem(); gaveta = { tipo: 'mensagem' }; selItem = null; render(); break;
+      case 'msg-copiar': copiar(textoMensagem); break;
+      case 'msg-refazer': textoMensagem = montarMensagem(); renderGaveta(); break;
+      case 'versoes':
+        versoes = { lista: [], pagina: 0, mais: true, carregando: false, erro: '', previa: null };
+        gaveta = { tipo: 'versoes' }; selItem = null; menuAberto = false; render(); carregarVersoes();
+        break;
+      case 'versoes-mais': carregarVersoes(); break;
+      case 'versao-ver': verVersao(d.sha, d.data); break;
+      case 'versao-fechar': versoes.previa = null; renderGaveta(); break;
+      case 'versao-restaurar': restaurarVersao(); break;
+      case 'setor-fotos': gaveta = { tipo: 'setor', id: d.setor }; selItem = null; render(); break;
+      case 'foto-add': { fotoDono = { tipo: d.dono, id: d.donoId }; const f = $('arquivo-foto'); f.value = ''; f.click(); break; }
+      case 'foto-ver': visorAberto = { tipo: d.dono, id: d.donoId, i: Number(d.i) || 0 }; renderVisor(); break;
+      case 'visor-ant': if (visorAberto) { visorAberto.i--; if (visorAberto.i < 0) visorAberto.i = fotosDe(donoDe(visorAberto)).length - 1; renderVisor(); } break;
+      case 'visor-prox': if (visorAberto) { visorAberto.i = (visorAberto.i + 1) % Math.max(1, fotosDe(donoDe(visorAberto)).length); renderVisor(); } break;
+      case 'visor-fechar': visorAberto = null; renderVisor(); break;
+      case 'foto-tirar': {
+        if (!visorAberto) return;
+        const alvo = visorAberto, i = alvo.i;
+        alterar(() => { const o = donoDe(alvo); if (o && Array.isArray(o.fotos)) o.fotos.splice(i, 1); });
+        renderVisor();
+        mostrarAviso('Foto tirada da lista. Se foi sem querer, use Desfazer.');
+        break;
+      }
       case 'sair': esquecerSenha(); try { location.reload(); } catch (e) { /* sem recarregar */ } break;
       case 'salvar': salvar(); break;
       case 'menu-exportar': menuAberto = !menuAberto; renderStatus(); break;
@@ -1394,14 +2108,18 @@ select.cel{cursor:pointer}
     return { p, t: p && d.etapa ? etapaDe(p, d.etapa) : null, it: d.item ? itemDe(d.item) : null, s: d.setor ? estado.setores.find((x) => x.id === d.setor) : null, r: p && d.raia ? p.raias.find((x) => x.id === d.raia) : null };
   }
   function aoDigitar(ev) {
-    const el = ev.target, c = el.dataset && el.dataset.campo;
-    if (!c || el.tagName === 'SELECT') return;
+    const el = ev.target;
+    if (el.id === 'busca-campo') { busca = { itens: resultadosBusca(el.value), indice: -1 }; renderBusca(true); return; }
+    if (el.id === 'texto-mensagem') { textoMensagem = el.value; const l = $('link-whats'); if (l) l.href = linkWhats(textoMensagem); return; }
+    const c = el.dataset && el.dataset.campo;
+    if (!c || el.tagName === 'SELECT' || consulta) return;
     const v = el.value, a = alvoDoCampo(el), W = estado.planta.salao.w, H = estado.planta.salao.h;
     let n;
     if (c === 'p-nome' && a.p) a.p.nome = v;
     else if (c === 'p-obj' && a.p) a.p.objetivo = v;
     else if (c === 'r-nome' && a.r) a.r.nome = v;
-    else if (['e-titulo', 'e-quem', 'e-registro', 'e-detalhe', 'e-resposta'].indexOf(c) >= 0 && a.t) a.t[c.slice(2)] = v;
+    else if (['e-titulo', 'e-quem', 'e-registro', 'e-detalhe', 'e-resposta', 'e-pergunta', 'e-respConfirma', 'e-sistema', 'e-obsSistema'].indexOf(c) >= 0 && a.t) a.t[c.slice(2)] = v;
+    else if (c === 'e-prazo' && a.t) { if (v && !dataValida(v)) return; a.t.prazo = v; }
     else if (c === 'saida-rotulo' && a.t && Array.isArray(a.t.saidas) && a.t.saidas[Number(el.dataset.i)]) a.t.saidas[Number(el.dataset.i)].rotulo = v;
     else if (c.indexOf('s-') === 0 && a.s) a.s[c.slice(2)] = v;
     else if (c === 'i-nome' && a.it) a.it.nome = v.slice(0, 80);
@@ -1439,12 +2157,21 @@ select.cel{cursor:pointer}
     if (el.id === 'rota-proc') { procRota = el.value || null; if (gaveta && gaveta.tipo === 'etapa') gaveta = null; render(); return; }
     if (el.id === 'encaixar') { encaixar = el.checked; return; }
     if (el.id === 'filtro-pend') { filtroPend = el.value; render(); return; }
+    if (el.id === 'filtro-quem') { filtroQuem = el.value; render(); return; }
+    if (el.id === 'filtro-impl') { filtroImpl = el.value; render(); return; }
+    if (el.id === 'arquivo-foto') { const lista = Array.from(el.files || []); el.value = ''; enviarFotos(lista); return; }
+    if (el.id === 'visor-legenda' && visorAberto) {
+      const alvo = visorAberto, v = el.value.slice(0, 120);
+      alterar(() => { const f = fotosDe(donoDe(alvo))[alvo.i]; if (f) f.legenda = v; });
+      return;
+    }
     const c = el.dataset && el.dataset.campo;
-    if (!c) return;
+    if (!c || consulta) return;
     const a = alvoDoCampo(el);
     if (el.tagName === 'SELECT') {
       const antes = JSON.stringify(estado);
       if (a.t && c === 'e-tipo') a.t.tipo = el.value;
+      else if (a.t && c === 'e-implantacao') a.t.implantacao = el.value;
       else if (a.t && c === 'e-raia') a.t.raia = el.value;
       else if (a.t && c === 'e-local') a.t.local = el.value;
       else if (a.t && c === 'e-situacao') a.t.situacao = el.value;
@@ -1459,6 +2186,8 @@ select.cel{cursor:pointer}
     confirmarEdicao();
     if (['i-w', 'i-h', 'i-x', 'i-y'].indexOf(c) >= 0 && a.it) el.value = fmt({ 'i-w': a.it.w, 'i-h': a.it.h, 'i-x': a.it.x, 'i-y': a.it.y }[c]);
     if (c === 'salao-w' || c === 'salao-h') el.value = fmt(c === 'salao-w' ? estado.planta.salao.w : estado.planta.salao.h);
+    // campos que mudam o que aparece em outras partes da tela (prazo vencido, situação no sistema, lista de nomes)
+    if (['e-prazo', 'e-respConfirma', 'e-registro', 'e-sistema'].indexOf(c) >= 0) render();
   }
 
   /* ---------- planta: arrastar ---------- */
@@ -1469,12 +2198,66 @@ select.cel{cursor:pointer}
     const q = pt.matrixTransform(m.inverse());
     return { x: q.x, y: q.y };
   }
+  // 3D: arrastar com um dedo (ou o mouse) anda pela loja quando está aproximado; dois dedos aproximam
+  function iniciarGesto3() {
+    const pts = Array.from(ponteiros3.values());
+    if (pts.length >= 2) {
+      const a = pts[0], b = pts[1];
+      gesto3 = { tipo: 'pinca', dist: Math.hypot(a.x - b.x, a.y - b.y) || 1, k0: zoom3.k, z0: { x: zoom3.x, y: zoom3.y }, meio: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 } };
+    } else if (pts.length === 1) gesto3 = { tipo: 'andar', x0: pts[0].x, y0: pts[0].y, z0: { x: zoom3.x, y: zoom3.y } };
+    else gesto3 = null;
+  }
+  function escala3() { const svg = $('svg-planta-3d'); if (!svg || !base3) return 0; const r = svg.getBoundingClientRect(); return r.width ? (base3.w / zoom3.k) / r.width : 0; }
+  function pressionar3(ev, svg) {
+    if (ev.pointerType === 'mouse' && ev.button !== 0) return;
+    ponteiros3.set(ev.pointerId, { x: ev.clientX, y: ev.clientY, x0: ev.clientX, y0: ev.clientY });
+    if (ponteiros3.size === 1) arrastou3 = false;
+    iniciarGesto3();
+  }
+  function mover3(ev) {
+    const q = ponteiros3.get(ev.pointerId);
+    if (!q || !gesto3) return;
+    q.x = ev.clientX; q.y = ev.clientY;
+    if (!q.preso && Math.hypot(q.x - q.x0, q.y - q.y0) > 5 && (zoom3.k > 1.001 || ponteiros3.size >= 2)) {
+      // só prende o ponteiro depois que ele anda, para o clique num bloco continuar abrindo o bloco
+      arrastou3 = true; q.preso = true;
+      try { $('svg-planta-3d').setPointerCapture(ev.pointerId); } catch (e) { /* sem captura */ }
+    }
+    const s = escala3();
+    if (!s) return;
+    if (gesto3.tipo === 'pinca' && ponteiros3.size >= 2) {
+      const pts = Array.from(ponteiros3.values()), a = pts[0], b = pts[1], dist = Math.hypot(a.x - b.x, a.y - b.y) || 1;
+      const svg = $('svg-planta-3d'), r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal;
+      const px = vb.x + (gesto3.meio.x - r.left) * (vb.width / r.width), py = vb.y + (gesto3.meio.y - r.top) * (vb.height / r.height);
+      const alvo = limitar(gesto3.k0 * dist / gesto3.dist, 1, 6);
+      zoomEm(alvo / zoom3.k, px, py);
+      ev.preventDefault();
+    } else if (gesto3.tipo === 'andar' && zoom3.k > 1.001) {
+      zoom3.x = gesto3.z0.x - (q.x - gesto3.x0) * s; zoom3.y = gesto3.z0.y - (q.y - gesto3.y0) * s;
+      limitarZoom3(); aplicarZoom3();
+      $('svg-planta-3d').classList.add('arrastando');
+      ev.preventDefault();
+    }
+  }
+  function soltar3(ev) {
+    if (!ponteiros3.has(ev.pointerId)) return;
+    ponteiros3.delete(ev.pointerId);
+    const svg = $('svg-planta-3d'); if (svg) svg.classList.remove('arrastando');
+    iniciarGesto3();
+  }
   function aoPressionar(ev) {
+    const svg3 = ev.target.closest && ev.target.closest('#svg-planta-3d');
+    if (svg3) { pressionar3(ev, svg3); return; }
     if (ev.pointerType === 'mouse' && ev.button !== 0) return;
     const alvo = ev.target, svg = alvo.closest && alvo.closest('#svg-planta');
     if (!svg) return;
     const marc = alvo.closest('[data-marcador]'), alca = alvo.closest('[data-alca]'), g = alvo.closest('[data-id]'), pt = pontoSvg(svg, ev);
     if (marc && procRota) { ev.preventDefault(); abrirEtapa(procRota, marc.getAttribute('data-marcador')); return; }
+    if (consulta) {
+      if (g) { const id = g.getAttribute('data-id'); selItem = id; gaveta = { tipo: 'item', id }; renderGaveta(); desenharTela(); }
+      else if (gaveta) { selItem = null; gaveta = null; renderGaveta(); desenharTela(); }
+      return;
+    }
     let it;
     if (alca && selItem) { it = itemDe(selItem); arrItem = { modo: 'tamanho', id: it.id, p0: pt, w0: it.w, h0: it.h, antes: JSON.stringify(estado), mudou: false, svg }; }
     else if (g) {
@@ -1489,6 +2272,7 @@ select.cel{cursor:pointer}
     ev.preventDefault();
   }
   function aoMover(ev) {
+    if (ponteiros3.size) { mover3(ev); return; }
     if (!arrItem) return;
     const it = itemDe(arrItem.id);
     if (!it) return;
@@ -1508,7 +2292,8 @@ select.cel{cursor:pointer}
     desenharTela();
     [['i-w-g', it.w], ['i-h-g', it.h], ['i-x-g', it.x], ['i-y-g', it.y]].forEach((q) => { const el = $(q[0]); if (el && document.activeElement !== el) el.value = fmt(q[1]); });
   }
-  function aoSoltar() {
+  function aoSoltar(ev) {
+    if (ev && ponteiros3.has(ev.pointerId)) { soltar3(ev); return; }
     if (!arrItem) return;
     const a = arrItem; arrItem = null;
     if (a.mudou && a.antes !== JSON.stringify(estado)) { registrar(a.antes); depoisDeMudar(); renderGaveta(); }
@@ -1517,12 +2302,22 @@ select.cel{cursor:pointer}
   /* ---------- teclado ---------- */
   function aoTeclar(ev) {
     const alvo = ev.target, tag = alvo && alvo.tagName;
-    if (ev.key === 'Escape') { if (menuAberto) { menuAberto = false; renderStatus(); return; } if (gaveta) { gaveta = null; selItem = null; render(); return; } }
+    if (visorAberto && tag !== 'INPUT') {
+      if (ev.key === 'Escape') { visorAberto = null; renderVisor(); return; }
+      if (ev.key === 'ArrowLeft') { acao('visor-ant'); return; }
+      if (ev.key === 'ArrowRight') { acao('visor-prox'); return; }
+    }
+    if (ev.key === 'Escape') {
+      if (visorAberto) { visorAberto = null; renderVisor(); return; }
+      if (menuAberto) { menuAberto = false; renderStatus(); return; }
+      if (gaveta) { gaveta = null; selItem = null; render(); return; }
+    }
     if (ev.key === 'Enter' && tag === 'TEXTAREA' && ['s-nome', 's-local', 's-atendimento', 'p-obj'].indexOf(alvo.dataset.campo) >= 0) { ev.preventDefault(); return; }
     if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA' || (alvo && alvo.isContentEditable)) return;
     const ctrl = ev.ctrlKey || ev.metaKey;
+    if (ev.key === '/' && !ctrl) { ev.preventDefault(); const topo = document.querySelector('.topo'); if (topo && !telaLarga()) topo.classList.add('busca-aberta'); $('busca-campo').focus(); return; }
     if (ctrl && (ev.key === 'z' || ev.key === 'Z')) { ev.preventDefault(); desfazer(); return; }
-    if (vista !== 'planta') return;
+    if (vista !== 'planta' || consulta || vista3d) return;
     const it = itemDe(selItem);
     if (!it) return;
     if (ctrl && (ev.key === 'd' || ev.key === 'D')) { ev.preventDefault(); acao('item-duplicar'); return; }
@@ -1573,6 +2368,9 @@ select.cel{cursor:pointer}
     if (e === 'token') return 'O GitHub recusou o acesso. Confira o token cadastrado na Vercel (GITHUB_TOKEN) e se ele ainda vale.';
     if (e === 'repositorio') return 'O repositório de dados não foi encontrado. Confira o nome cadastrado na Vercel (GITHUB_REPO) e se o token tem acesso a ele.';
     if (e === 'grande') return 'Os dados ficaram grandes demais para salvar.';
+    if (e === 'consulta') return 'Esta senha é só de consulta: dá para ver tudo, mas não para mudar.';
+    if (e === 'bloqueado') return 'Muitas tentativas com senha errada. Espere ' + (d.minutos || 15) + (d.minutos === 1 ? ' minuto' : ' minutos') + ' e tente de novo.';
+    if (e === 'senha') return 'A senha não vale mais. Saia e entre de novo.';
     return 'O servidor não respondeu como esperado (código ' + status + '). Tente de novo em instantes.';
   }
   function mostrarEntrada(erro, carregando) {
@@ -1593,8 +2391,10 @@ select.cel{cursor:pointer}
       d = await r.json().catch(() => ({}));
     } catch (e) { mostrarEntrada('Sem conexão com o servidor. Confira a internet e tente de novo.'); return; }
     if (r.status === 401) { esquecerSenha(); mostrarEntrada('Senha incorreta.'); return; }
+    if (r.status === 429) { esquecerSenha(); mostrarEntrada(mensagemServidor(d, r.status)); return; }
     if (!r.ok) { mostrarEntrada(mensagemServidor(d, r.status)); return; }
     versaoServidor = d.versao || null;
+    consulta = d.perfil === 'consulta';
     dadosCarregados = true;
     const vindo = d.estado && valido(d.estado) ? d.estado : null;
     if (vindo) { inicial = clonar(vindo); salvo = clonar(vindo); estado = clonar(vindo); }
@@ -1603,12 +2403,13 @@ select.cel{cursor:pointer}
     if (!vindo) mostrarAviso('O repositório de dados ainda está vazio. O primeiro salvamento cria o arquivo com os dados.');
   }
   function agendarAutoSalvar() {
-    if (!MODO_SERVIDOR || autoParado) return;
+    if (!MODO_SERVIDOR || autoParado || consulta) return;
     clearTimeout(timerAuto);
     timerAuto = setTimeout(() => { salvarServidor(); }, 2500);
   }
   async function salvarServidor() {
     clearTimeout(timerAuto);
+    if (consulta) return;
     if (salvando) { salvarDeNovo = true; return; }
     if (chave(estado) === chave(salvo) && salvo.salvoEm) return;
     const novo = clonar(estado);
@@ -2022,8 +2823,9 @@ select.cel{cursor:pointer}
       doc.push(tabela([{ titulo: 'Nº', cm: 0.9, align: AlignmentType.CENTER }, { titulo: 'Etapa', cm: 6.0 }, { titulo: 'Quem faz', cm: 2.9 }, { titulo: 'Onde', cm: 2.6 }, { titulo: 'Segue para', cm: 2.4 }, { titulo: 'Situação', cm: 2.6 }],
         p.etapas.map((x) => {
           const etapa = [par([t(x.titulo || 'Sem título', { font: F.bold, size: 19, color: C.navy })], { spacing: { after: 30, line: 264 } })];
-          if (x.detalhe) etapa.push(par([t(x.detalhe, { font: F.light, size: 17, color: C.suave })], { spacing: { after: x.registro ? 30 : 0, line: 264 } }));
-          if (x.registro) etapa.push(par([t('Documento: ', { font: F.bold, size: 16, color: C.fraco }), t(x.registro, { font: F.light, size: 16, color: C.fraco })], { spacing: { after: 0, line: 252 } }));
+          if (x.detalhe) etapa.push(par([t(x.detalhe, { font: F.light, size: 17, color: C.suave })], { spacing: { after: x.registro || x.sistema ? 30 : 0, line: 264 } }));
+          if (x.registro) etapa.push(par([t('Documento: ', { font: F.bold, size: 16, color: C.fraco }), t(x.registro, { font: F.light, size: 16, color: C.fraco })], { spacing: { after: x.sistema ? 20 : 0, line: 252 } }));
+          if (x.sistema) etapa.push(par([t('Tela do sistema: ', { font: F.bold, size: 16, color: C.fraco }), t(x.sistema, { font: F.light, size: 16, color: C.fraco })], { spacing: { after: 0, line: 252 } }));
           const quem = [par([t('● ', { color: hexR(p, x.raia), font: F.simb, size: 18 }), t(nomeRaia(p, x.raia) || 'Sem participante', { font: F.reg, size: 18 })], { spacing: { after: 20, line: 264 } })];
           if (x.quem) quem.push(par([t(x.quem, { font: F.light, size: 16, color: C.suave })], { spacing: { after: 0, line: 252 } }));
           const prox = ligs.filter((l) => l.de === x.id).map((l) => par([t((l.rotulo ? l.rotulo + ': ' : '') + 'passo ' + numero(p, etapaDe(p, l.para)), { font: F.light, size: 18 })], { spacing: { after: 10, line: 264 } }));
@@ -2057,13 +2859,40 @@ select.cel{cursor:pointer}
         doc.push(tabela([{ titulo: 'Nº', cm: 0.9, align: AlignmentType.CENTER }, { titulo: 'Etapa', cm: 7.1 }, { titulo: 'Resposta da equipe', cm: 7.8 }, { titulo: 'OK', cm: 1.6, align: AlignmentType.CENTER }],
           lista.map((o) => {
             const etapa = [par([t(o.x.titulo || 'Sem título', { font: F.bold, size: 19, color: C.navy })], { spacing: { after: 30, line: 264 } })];
-            if (o.x.detalhe) etapa.push(par([t(o.x.detalhe, { font: F.light, size: 17, color: C.suave })], { spacing: { after: 0, line: 264 } }));
+            const extras = [];
+            if (o.x.pergunta) extras.push(['Perguntar: ', o.x.pergunta]);
+            if (o.x.respConfirma) extras.push(['Quem confirma: ', o.x.respConfirma]);
+            if (dataValida(o.x.prazo)) extras.push(['Prazo: ', dataCurta(o.x.prazo)]);
+            if (o.x.detalhe) etapa.push(par([t(o.x.detalhe, { font: F.light, size: 17, color: C.suave })], { spacing: { after: extras.length ? 30 : 0, line: 264 } }));
+            extras.forEach((e2, k) => etapa.push(par([t(e2[0], { font: F.bold, size: 16, color: C.fraco }), t(e2[1], { font: F.light, size: 16, color: C.fraco })], { spacing: { after: k < extras.length - 1 ? 20 : 0, line: 252 } })));
             return [{ conteudo: String(o.n), fonte: F.extra, tam: 21, cor: hexR(p, o.x.raia) }, { conteudo: etapa }, { conteudo: o.x.resposta || '', tam: 18 },
               { conteudo: [par([t('☐', { font: F.simb, size: 28, color: C.suave })], { alignment: AlignmentType.CENTER, spacing: { after: 0 } })] }];
           }), { altura: 820 }));
         doc.push(espaco(160));
       });
     } else doc.push(corpo('Nenhuma etapa está marcada como a confirmar.'));
+
+    /* 6 implantação do sistema, quando há etapas ligadas a ele */
+    const impl = resumoImplantacao();
+    if (impl.usam) {
+      doc.push(...capitulo('6', 'Implantação do sistema', 'Documentos e telas'));
+      doc.push(corpo('Etapas que usam o sistema, com o documento envolvido, a tela ou rotina usada e em que pé está a configuração. ' +
+        impl.prontas + ' de ' + impl.usam + (impl.usam === 1 ? ' etapa já foi testada ou está' : ' etapas já foram testadas ou estão') + ' em uso; ' +
+        impl.configurar + ' ainda ' + (impl.configurar === 1 ? 'precisa' : 'precisam') + ' ser configuradas e ' + impl.configurado + ' ' + (impl.configurado === 1 ? 'está configurada' : 'estão configuradas') + ' esperando teste.'));
+      procs.forEach((p) => {
+        const lista = p.etapas.map((x, i) => ({ x, n: i + 1 })).filter((o) => situacaoSistema(o.x) !== 'nao');
+        if (!lista.length) return;
+        doc.push(subtitulo(p.nome || 'Sem nome', lista.length + (lista.length === 1 ? ' etapa' : ' etapas')));
+        doc.push(tabela([{ titulo: 'Nº', cm: 0.9, align: AlignmentType.CENTER }, { titulo: 'Etapa', cm: 5.0 }, { titulo: 'Documento', cm: 3.0 }, { titulo: 'Tela do sistema', cm: 3.6 }, { titulo: 'Situação', cm: 2.7 }, { titulo: 'Observação', cm: 2.2 }],
+          lista.map((o) => {
+            const s = situacaoSistema(o.x), pronto = s === 'testado' || s === 'uso';
+            return [{ conteudo: String(o.n), fonte: F.extra, tam: 21, cor: hexR(p, o.x.raia) }, { conteudo: [par([t(o.x.titulo || 'Sem título', { font: F.bold, size: 18, color: C.navy })], { spacing: { after: 0, line: 264 } })] },
+              { conteudo: o.x.registro || '', tam: 17 }, { conteudo: o.x.sistema || '', tam: 17 },
+              { conteudo: SIT_SISTEMA[s], fonte: F.bold, tam: 17, cor: pronto ? C.navy : C.laranjaTxt }, { conteudo: o.x.obsSistema || '', tam: 16, cor: C.suave }];
+          })));
+        doc.push(espaco(160));
+      });
+    }
 
     /* bloco de contato, como no fecho dos relatórios */
     const wL = Math.round(5 * CM);
@@ -2153,7 +2982,7 @@ select.cel{cursor:pointer}
   // depois de salvar a página recarrega; volta para a tela em que a pessoa estava
   try { const t = JSON.parse(localStorage.getItem(CHAVE_TELA) || 'null'); if (t && typeof t.vista === 'string') { vista = t.vista; procRota = t.procRota || null; vista3d = !!t.vista3d; rot3d = [0, 1, 2, 3].indexOf(t.rot3d) >= 0 ? t.rot3d : 0; } } catch (e) { /* sem armazenamento */ }
   function iniciarComDados() {
-  const rasc = lerRascunho();
+  const rasc = consulta ? null : lerRascunho();
   if (rasc && valido(rasc.estado) && chave(rasc.estado) !== chave(salvo)) {
     if (rasc.base === chave(salvo)) {
       estado = clonar(rasc.estado); estado.salvoEm = salvo.salvoEm;
@@ -2181,6 +3010,9 @@ select.cel{cursor:pointer}
 
   const app = $('app');
   app.addEventListener('click', (ev) => {
+    if (!ev.target.closest('#busca') && !ev.target.closest('[data-acao="abrir-busca"]')) renderBusca(false);
+    if (arrastou3 && ev.target.closest('#svg-planta-3d')) { arrastou3 = false; return; }
+    if (ev.target.id === 'visor') { visorAberto = null; renderVisor(); return; }
     const b = ev.target.closest('[data-acao]');
     if (b && !b.disabled) { acao(b.dataset.acao, b); return; }
     const m3 = ev.target.closest('[data-marcador3]');
@@ -2208,7 +3040,25 @@ select.cel{cursor:pointer}
   app.addEventListener('pointerdown', aoPressionar);
   app.addEventListener('pointermove', aoMover);
   app.addEventListener('pointerup', aoSoltar);
-  app.addEventListener('pointercancel', () => { arrItem = null; });
+  app.addEventListener('pointercancel', (ev) => { arrItem = null; soltar3(ev); });
+  app.addEventListener('toggle', (ev) => { if (ev.target && ev.target.id === 'dobra-ferr') dobraFerr = ev.target.open; }, true);
+  app.addEventListener('wheel', (ev) => {
+    const svg = ev.target.closest && ev.target.closest('#svg-planta-3d');
+    if (!svg || !(ev.ctrlKey || ev.metaKey || zoom3.k > 1.001)) return;
+    // com Ctrl (ou o gesto de pinça do trackpad) aproxima; já aproximado, a rodinha também aproxima e afasta
+    ev.preventDefault();
+    const r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal;
+    zoomEm(Math.exp(-ev.deltaY * (ev.ctrlKey ? 0.01 : 0.0025)), vb.x + (ev.clientX - r.left) * (vb.width / r.width), vb.y + (ev.clientY - r.top) * (vb.height / r.height));
+  }, { passive: false });
+  const campoBusca = $('busca-campo');
+  campoBusca.addEventListener('keydown', (ev) => {
+    const n = busca.itens.length;
+    if (ev.key === 'ArrowDown' && n) { ev.preventDefault(); busca.indice = (busca.indice + 1) % n; renderBusca(true); }
+    else if (ev.key === 'ArrowUp' && n) { ev.preventDefault(); busca.indice = (busca.indice - 1 + n) % n; renderBusca(true); }
+    else if (ev.key === 'Enter') { ev.preventDefault(); if (n) irParaResultado(busca.itens[Math.max(0, busca.indice)]); }
+    else if (ev.key === 'Escape') { ev.preventDefault(); fecharBusca(true); campoBusca.blur(); }
+  });
+  campoBusca.addEventListener('focus', () => { if (campoBusca.value) { busca = { itens: resultadosBusca(campoBusca.value), indice: -1 }; renderBusca(true); } });
   document.addEventListener('keydown', aoTeclar);
   let espera = null;
   medirTopo();
