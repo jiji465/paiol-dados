@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:06:55.830Z",
+ "salvoEm": "2026-10-22T14:07:15.827Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -301,7 +301,13 @@
     "x": 3,
     "y": 15.7,
     "w": 1.8,
-    "h": 3.2
+    "h": 3.2,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjm7p48b2kr.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "racoes-1",
