@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:35:48.010Z",
+ "salvoEm": "2026-10-22T14:36:00.741Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -15,7 +15,13 @@
     "x": 11.4,
     "y": 0,
     "w": 1.6,
-    "h": 4.6
+    "h": 4.6,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjn8og2d4fl.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "porta-fundos-1",
