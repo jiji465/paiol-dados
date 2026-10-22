@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T12:23:01.101Z",
+ "salvoEm": "2026-10-22T13:13:16.159Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -366,16 +366,6 @@
     "h": 2.5,
     "x": 0,
     "y": 0
-   },
-   {
-    "id": "xmvjihp2dxs26",
-    "tipo": "movel",
-    "grupo": "atendimento",
-    "nome": "Novo balcão",
-    "w": 2.5,
-    "h": 0.6,
-    "x": 5.25,
-    "y": 10.75
    }
   ]
  },
