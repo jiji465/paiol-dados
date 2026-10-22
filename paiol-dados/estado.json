@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:36:16.134Z",
+ "salvoEm": "2026-10-22T14:36:39.221Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -155,7 +155,13 @@
     "x": 2.3,
     "y": 4.75,
     "w": 10.5,
-    "h": 0.3
+    "h": 0.3,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjn9h7k5lxf.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "sementes",
