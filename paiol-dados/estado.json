@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:46:25.313Z",
+ "salvoEm": "2026-10-22T14:46:39.858Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -342,7 +342,13 @@
     "x": 6.4,
     "y": 18.6,
     "w": 1.6,
-    "h": 1.2
+    "h": 1.2,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjnmdghw7yb.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "txt-corredor",
