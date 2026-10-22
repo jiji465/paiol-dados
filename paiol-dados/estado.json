@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:45:54.903Z",
+ "salvoEm": "2026-10-22T14:46:07.469Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -326,7 +326,13 @@
     "x": 6.2,
     "y": 14.6,
     "w": 2.4,
-    "h": 3.2
+    "h": 3.2,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjnlodp5guh.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "arame",
