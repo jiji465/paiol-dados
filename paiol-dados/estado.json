@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:35:34.928Z",
+ "salvoEm": "2026-10-22T14:35:48.010Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -87,7 +87,13 @@
     "x": 10.8,
     "y": 0.7,
     "w": 0.5,
-    "h": 3.7
+    "h": 3.7,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjn8eb245g3.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "provar-bota",
