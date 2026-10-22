@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T13:39:31.623Z",
+ "salvoEm": "2026-10-22T13:39:36.001Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -92,7 +92,7 @@
     "tipo": "estante",
     "grupo": "racao",
     "nome": "Ração a granel (dispensers)",
-    "x": 12.5,
+    "x": 12.25,
     "y": 0.5,
     "w": 0.5,
     "h": 2
