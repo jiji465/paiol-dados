@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:04:57.311Z",
+ "salvoEm": "2026-10-22T14:06:18.750Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -285,7 +285,13 @@
     "x": 3,
     "y": 14.2,
     "w": 1.8,
-    "h": 0.9
+    "h": 0.9,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjm6gjanwxp.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "fertilizantes",
