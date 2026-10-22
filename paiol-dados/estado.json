@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:07:32.821Z",
+ "salvoEm": "2026-10-22T14:07:57.116Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -449,7 +449,13 @@
     "x": 12.4,
     "y": 16.2,
     "w": 0.5,
-    "h": 5
+    "h": 5,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjm8lad25ai.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "entrada-principal",
