@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T13:59:56.883Z",
+ "salvoEm": "2026-10-22T14:00:06.697Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -187,7 +187,13 @@
     "x": 0.8,
     "y": 5.8,
     "w": 0.6,
-    "h": 1.5
+    "h": 1.5,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjlyie1dv1v.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "medicamentos",
