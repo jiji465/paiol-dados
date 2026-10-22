@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:07:15.827Z",
+ "salvoEm": "2026-10-22T14:07:32.821Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -433,7 +433,13 @@
     "x": 9.75,
     "y": 16.5,
     "w": 1.7,
-    "h": 3
+    "h": 3,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjm82iziq8g.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "rocadeiras",
