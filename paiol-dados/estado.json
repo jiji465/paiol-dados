@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:48:55.193Z",
+ "salvoEm": "2026-10-22T15:20:29.478Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -314,8 +314,8 @@
     "tipo": "estante",
     "grupo": "racao",
     "nome": "Rações (paletes)",
-    "x": 3.6,
-    "y": 6.4,
+    "x": 4.5,
+    "y": 6.5,
     "w": 1.4,
     "h": 7.2,
     "fotos": [
@@ -330,8 +330,8 @@
     "tipo": "estante",
     "grupo": "racao",
     "nome": "Rações (paletes)",
-    "x": 6.2,
-    "y": 6.4,
+    "x": 6,
+    "y": 6.25,
     "w": 2.4,
     "h": 7.2,
     "fotos": [
