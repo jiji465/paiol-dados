@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:08:10.188Z",
+ "salvoEm": "2026-10-22T14:08:15.848Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -452,8 +452,8 @@
     "tipo": "estante",
     "grupo": "ferramentas",
     "nome": "Pulverizadores e roçadeiras",
-    "x": 12.4,
-    "y": 16.2,
+    "x": 12.5,
+    "y": 16.25,
     "w": 0.5,
     "h": 5,
     "fotos": [
