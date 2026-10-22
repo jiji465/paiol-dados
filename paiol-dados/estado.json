@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T13:41:38.303Z",
+ "salvoEm": "2026-10-22T13:42:02.641Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -65,7 +65,13 @@
     "x": 5.75,
     "y": 0,
     "w": 5.5,
-    "h": 0.5
+    "h": 0.5,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjlba4p4nc8.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "calcados-lateral",
