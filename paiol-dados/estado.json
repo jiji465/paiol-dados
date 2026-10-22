@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:38:31.028Z",
+ "salvoEm": "2026-10-22T14:38:53.087Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -355,15 +355,31 @@
     "h": 10.2,
     "fotos": [
      {
-      "arquivo": "fotos/xmvjnbsspuudc.jpg",
+      "arquivo": "fotos/xmvjnc2631d3o.jpg",
       "legenda": ""
      },
      {
-      "arquivo": "fotos/xmvjnbuf3t1jx.jpg",
+      "arquivo": "fotos/xmvjnc3yw67xd.jpg",
       "legenda": ""
      },
      {
-      "arquivo": "fotos/xmvjnbwj383zy.jpg",
+      "arquivo": "fotos/xmvjnc5u1m43p.jpg",
+      "legenda": ""
+     },
+     {
+      "arquivo": "fotos/xmvjnc84symsj.jpg",
+      "legenda": ""
+     },
+     {
+      "arquivo": "fotos/xmvjnc9x7cv4b.jpg",
+      "legenda": ""
+     },
+     {
+      "arquivo": "fotos/xmvjncc0brz6u.jpg",
+      "legenda": ""
+     },
+     {
+      "arquivo": "fotos/xmvjncdn30coy.jpg",
       "legenda": ""
      }
     ]
