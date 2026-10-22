@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:08:15.848Z",
+ "salvoEm": "2026-10-22T14:08:55.166Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -265,7 +265,13 @@
     "x": 0.1,
     "y": 17.4,
     "w": 0.5,
-    "h": 3.8
+    "h": 3.8,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjm9u0m9z5k.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "passaros",
