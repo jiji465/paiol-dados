@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:33:24.394Z",
+ "salvoEm": "2026-10-22T14:33:43.510Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -281,13 +281,7 @@
     "x": 6.25,
     "y": 21,
     "w": 0.8,
-    "h": 0.8,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjm9ysb42fz.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 0.8
    },
    {
     "id": "suplementos",
@@ -432,8 +426,8 @@
     "tipo": "estante",
     "grupo": "ferramentas",
     "nome": "Equipamentos e cerca elétrica",
-    "x": 12.5,
-    "y": 5.5,
+    "x": 12.4,
+    "y": 5.6,
     "w": 0.5,
     "h": 10.2,
     "fotos": [
