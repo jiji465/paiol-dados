@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T13:40:19.606Z",
+ "salvoEm": "2026-10-22T13:41:38.303Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -302,8 +302,8 @@
     "tipo": "estante",
     "grupo": "racao",
     "nome": "Sal mineral (paletes)",
-    "x": 9.5,
-    "y": 10.5,
+    "x": 9.25,
+    "y": 9.5,
     "w": 2.2,
     "h": 3
    },
