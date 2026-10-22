@@ -200,7 +200,12 @@ select.cel{cursor:pointer}
 .vista-planta .segmento{width:min(300px,100%)}
 .planta-3d{display:block;width:100%;height:auto;border-radius:8px;background:var(--piso)}
 .planta-svg{display:block;width:100%;height:auto;touch-action:pan-x pan-y;user-select:none;-webkit-user-select:none;border-radius:8px;background:var(--piso)}
-.planta-svg [data-id],.planta-svg [data-alca]{touch-action:none}
+.planta-svg [data-id].sel-toque,.planta-svg [data-alca]{touch-action:none}
+.planta-svg.ampliada{touch-action:none;cursor:grab}
+.planta-svg.travada{touch-action:none}
+.planta-svg.arrastando{cursor:grabbing}
+.sobrepostos{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13px;color:var(--perigo)}
+.sobrepostos:empty{display:none}
 .consulta .planta-svg [data-id]{touch-action:auto;cursor:pointer!important}
 .planta-3d{touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .planta-3d.ampliada{touch-action:none}
@@ -401,6 +406,8 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
   .busca{display:none;position:absolute;left:12px;right:12px;top:calc(100% + 6px);max-width:none}
   .busca-aberta .busca{display:block}
   .topo-int{position:relative}
+  .gaveta.baixa{height:52vh}
+  .com-gaveta-baixa .corpo{padding-bottom:56vh}
   .gaveta{top:auto;height:86vh;width:100%;border-left:0;border-top:1px solid var(--linha);border-radius:14px 14px 0 0;transform:translateY(105%)}
   .faixas{grid-template-columns:repeat(2,minmax(0,1fr))}
   .secao{padding:14px}
@@ -470,6 +477,7 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
   let exportando = false, modoMini = false;
   let consulta = false, realce = null, timerRealce = null, busca = { itens: [], indice: -1 };
   let zoom3 = { k: 1, x: 0, y: 0 }, base3 = null, gesto3 = null, arrastou3 = false;
+  let zoom2 = { k: 1, x: 0, y: 0 }, base2 = null, toque = null, arrPan = null, selDesenho = null;
   const ponteiros3 = new Map();
   let versoes = { lista: [], pagina: 0, mais: true, carregando: false, erro: '', previa: null };
   let filtroQuem = '', filtroImpl = 'usam', textoMensagem = '', visorAberto = null, enviandoFotos = 0, dobraFerr = null;
@@ -591,10 +599,12 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
       '" fill="none" style="stroke:' + cor('tinta-suave') + ';stroke-width:0.02;stroke-dasharray:0.08 0.06"/>';
   }
   function ajuste(nome, w, h, max) {
-    const n = Math.max(nome.length, 1), vertical = h > w * 1.5 && w < 1.2;
-    const comp = (vertical ? h : w) - 0.16, larg = vertical ? w : h;
-    const k = exportando ? 0.6 : 0.5, mx = exportando ? max * 1.3 : max;
-    return { fs: Math.max(Math.min(mx, comp / (n * k), larg * 0.62), 0.1), vertical };
+    const n = Math.max(nome.length, 1), k = exportando ? 0.6 : 0.5, mx = exportando ? max * 1.3 : max;
+    const tam = (comp, larg) => Math.max(Math.min(mx, (comp - 0.16) / (n * k), larg * 0.62), 0.1);
+    const deitado = tam(w, h), empe = tam(h, w);
+    // em pé só quando o bloco é mais fundo que largo e o nome fica bem maior assim
+    const vertical = h > w * 1.3 && empe > deitado * 1.15;
+    return { fs: vertical ? empe : deitado, vertical };
   }
   function rotuloCentral(nome, cx, cy, w, h, max, halo) {
     if (!nome || modoMini) return '';
@@ -656,7 +666,7 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
           '" dominant-baseline="central" style="font-family:' + fonte('titulo') + ';font-weight:600;font-size:' + (exportando ? 0.29 : 0.24) + 'px;fill:' + cor('tinta-suave') + halo + '">' + esc(it.nome) + '</text>';
         if (horiz) {
           c += rect(x, y - 0.12, w, h + 0.24, 'fill:' + cor('piso'));
-          d = cy > H / 2 ? -1 : 1;
+          d = (cy > H / 2 ? -1 : 1) * (it.abre === -1 ? -1 : 1);
           if (w >= 1.6) {
             l = w / 2;
             c += linha(x, cy, x, cy + d * l, est) + arco(x + l, cy, l, x, cy + d * l, d > 0 ? 1 : 0);
@@ -667,7 +677,7 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
           c += rect(x, y - 0.15, w, h + 0.3, 'fill:#000;fill-opacity:0');
         } else {
           c += rect(x - 0.12, y, w + 0.24, h, 'fill:' + cor('piso'));
-          d = cx > W / 2 ? -1 : 1;
+          d = (cx > W / 2 ? -1 : 1) * (it.abre === -1 ? -1 : 1);
           if (h >= 1.6) {
             l = h / 2;
             c += linha(cx, y, cx + d * l, y, est) + arco(cx, y + l, l, cx + d * l, y, d > 0 ? 0 : 1);
@@ -685,7 +695,7 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
           r2(limitar(h * 0.72, 0.12, 0.9)) + 'px;fill:' + cor('tinta-suave') + ';letter-spacing:0.02em">' + esc(it.nome) + '</text>';
         break;
     }
-    return '<g' + (modoMini ? '' : ' data-id="' + esc(it.id) + '" style="cursor:move"') + '>' + c + '</g>';
+    return '<g' + (modoMini ? '' : ' data-id="' + esc(it.id) + '"' + (it.id === selDesenho ? ' class="sel-toque"' : '') + ' style="cursor:move"') + '>' + c + '</g>';
   }
   function reguas(W, H) {
     const s = [], passo = (W > 24 || H > 24) ? 2 : 1;
@@ -709,8 +719,8 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
     const porItem = {}, pos = {}, esp = modoMini ? 0.95 : 0.78;
     p.etapas.forEach((t) => { if (t.local && itemDe(t.local)) (porItem[t.local] = porItem[t.local] || []).push(t); });
     Object.keys(porItem).forEach((id) => {
-      const it = itemDe(id), lista = porItem[id], n = lista.length, cx = it.x + it.w / 2, cy = it.y + it.h / 2;
-      lista.forEach((t, k) => { pos[t.id] = { x: cx + (k - (n - 1) / 2) * esp, y: cy }; });
+      const it = itemDe(id), lista = porItem[id], n = lista.length, cx = it.x + it.w / 2, cy = it.y + it.h / 2, empe = it.h > it.w;
+      lista.forEach((t, k) => { const d = (k - (n - 1) / 2) * esp; pos[t.id] = empe ? { x: cx, y: cy + d } : { x: cx + d, y: cy }; });
     });
     return pos;
   }
@@ -742,6 +752,16 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
     });
     return s;
   }
+  const SOLIDOS = ['estante', 'movel', 'caixa', 'recipiente'];
+  function sobreposicoes() {
+    const l = estado.planta.itens.filter((it) => SOLIDOS.indexOf(it.tipo) >= 0), res = [];
+    for (let i = 0; i < l.length; i++) for (let j = i + 1; j < l.length; j++) {
+      const a = l[i], b = l[j];
+      const x0 = Math.max(a.x, b.x), x1 = Math.min(a.x + a.w, b.x + b.w), y0 = Math.max(a.y, b.y), y1 = Math.min(a.y + a.h, b.y + b.h);
+      if (x1 - x0 > 0.05 && y1 - y0 > 0.05) res.push({ a, b, x: x0, y: y0, w: x1 - x0, h: y1 - y0 });
+    }
+    return res;
+  }
   function desenhar(o) {
     const e = estado, W = e.planta.salao.w, H = e.planta.salao.h, M = o.mini ? 0.3 : 0.9, pref = o.pref || (o.mini ? 'm-' : '');
     modoMini = !!o.mini;
@@ -759,6 +779,7 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
       p.push('<text x="1.15" y="' + r2(yb) + '" style="' + est + ';fill:' + cor('tinta') + '">1 m</text>');
       p.push('<text x="' + r2(W) + '" y="' + r2(yb) + '" text-anchor="end" style="' + est + '">Salão de ' + fmt(W) + ' por ' + fmt(H) + ' m, planta esquemática</text>');
     }
+    selDesenho = !o.mini && !exportando ? o.sel || null : null;
     const ordem = e.planta.itens.map((it, i) => ({ it, i })).sort((a, b) => (CAMADA[a.it.tipo] - CAMADA[b.it.tipo]) || (a.i - b.i));
     const paredes = rect(0, 0, W, H, 'fill:none;stroke:' + cor('parede') + ';stroke-width:' + (o.mini ? 0.25 : 0.2));
     let feitas = false;
@@ -768,12 +789,23 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
     });
     if (!feitas) p.push(paredes);
     const sel = !o.mini && o.sel ? itemDe(o.sel) : null;
+    if (!o.mini && !exportando) sobreposicoes().forEach((q) => {
+      p.push(rect(q.x, q.y, q.w, q.h, 'fill:' + cor('perigo') + ';fill-opacity:0.18;stroke:' + cor('perigo') + ';stroke-width:0.04;stroke-dasharray:0.12 0.08;pointer-events:none'));
+    });
     if (sel) {
       const m = 0.07;
       p.push(rect(sel.x - m, sel.y - m, sel.w + 2 * m, sel.h + 2 * m, 'fill:none;stroke:' + cor('selecao') + ';stroke-width:0.04;stroke-dasharray:0.14 0.09;pointer-events:none'));
-      p.push('<rect data-alca="1" x="' + r2(sel.x + sel.w - 0.3) + '" y="' + r2(sel.y + sel.h - 0.3) + '" width="0.6" height="0.6" style="fill:#000;fill-opacity:0;cursor:nwse-resize"/>');
-      p.push('<rect data-alca="1" x="' + r2(sel.x + sel.w - 0.13) + '" y="' + r2(sel.y + sel.h - 0.13) + '" width="0.26" height="0.26" rx="0.03" style="fill:' +
-        cor('selecao') + ';stroke:' + cor('piso') + ';stroke-width:0.03;cursor:nwse-resize"/>');
+      // quatro cantos para mudar o tamanho para qualquer lado
+      [['nw', 0, 0, 'nwse'], ['ne', 1, 0, 'nesw'], ['sw', 0, 1, 'nesw'], ['se', 1, 1, 'nwse']].forEach((q) => {
+        const ax = sel.x + sel.w * q[1], ay = sel.y + sel.h * q[2];
+        p.push('<rect data-alca="' + q[0] + '" x="' + r2(ax - 0.3) + '" y="' + r2(ay - 0.3) + '" width="0.6" height="0.6" style="fill:#000;fill-opacity:0;cursor:' + q[3] + '-resize"/>');
+        p.push('<rect data-alca="' + q[0] + '" x="' + r2(ax - 0.13) + '" y="' + r2(ay - 0.13) + '" width="0.26" height="0.26" rx="0.03" style="fill:' +
+          cor('selecao') + ';stroke:' + cor('piso') + ';stroke-width:0.03;cursor:' + q[3] + '-resize"/>');
+      });
+      // medidas do bloco selecionado
+      const tc = fmt(sel.w) + ' × ' + fmt(sel.h) + ' m', ty = sel.y > 0.55 ? sel.y - 0.32 : sel.y + sel.h + 0.42;
+      p.push('<text x="' + r2(sel.x + sel.w / 2) + '" y="' + r2(ty) + '" text-anchor="middle" style="pointer-events:none;font-family:' + fonte('medida') +
+        ';font-weight:500;font-size:0.26px;fill:' + cor('selecao') + ';paint-order:stroke;stroke:' + cor('piso') + ';stroke-width:0.08;stroke-linejoin:round">' + tc + '</text>');
     }
     const ac = !o.mini && !exportando && realce ? itemDe(realce) : null;
     if (ac) {
@@ -1239,12 +1271,13 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
     const p = procDe(procRota);
     return cabPagina('Loja', 'Planta da loja', vista3d ? 'A vista 3D mostra a loja em perspectiva, com a altura de prateleiras, paletes e balcões. Clique num bloco para ver os dados dele. Use + e − para aproximar e arraste para andar pela loja' + (consulta ? '.' : '; para mudar de lugar, use a vista plana.')
       : consulta ? 'Clique num bloco para ver os dados e as fotos dele. Escolha um processo para ver o caminho dele na planta.'
-      : 'Arraste os blocos para mudar de lugar; o quadradinho no canto do bloco selecionado muda o tamanho. Escolha um processo para ver o caminho dele na planta.') +
+      : 'Arraste os blocos para mudar de lugar; os quadradinhos nos cantos do bloco selecionado mudam o tamanho. No celular, toque no bloco antes de arrastar. Use + e − para aproximar e escolha um processo para ver o caminho dele na planta.') +
       '<section class="secao"><div class="vista-planta"><div class="segmento" role="group" aria-label="Tipo de vista">' +
       `<button type="button" data-acao="vista-plana" aria-pressed="${!vista3d}">Vista plana</button><button type="button" data-acao="vista-3d" aria-pressed="${vista3d}">Vista 3D</button></div>` +
       (vista3d ? '<button type="button" class="btn btn-pequeno" data-acao="girar-3d">↻ Girar a vista</button>' +
         `<span class="zoom3" role="group" aria-label="Aproximar"><button type="button" data-acao="zoom3-menos" aria-label="Afastar">−</button><span id="zoom3-nivel">${Math.round(zoom3.k * 100)}%</span><button type="button" data-acao="zoom3-mais" aria-label="Aproximar">+</button><button type="button" data-acao="zoom3-ajustar" style="font-size:13px;padding:0 8px">Ajustar</button></span>` +
-        '<span class="dica">' + ['Vista da frente, pela direita', 'Vista do lado direito, pelo fundo', 'Vista do fundo, pela esquerda', 'Vista do lado esquerdo, pela frente'][rot3d] + '</span>' : '') + '</div>' +
+        '<span class="dica">' + ['Vista da frente, pela direita', 'Vista do lado direito, pelo fundo', 'Vista do fundo, pela esquerda', 'Vista do lado esquerdo, pela frente'][rot3d] + '</span>'
+        : `<span class="zoom3" role="group" aria-label="Aproximar a planta"><button type="button" data-acao="zoom2-menos" aria-label="Afastar">−</button><span id="zoom2-nivel">${Math.round(zoom2.k * 100)}%</span><button type="button" data-acao="zoom2-mais" aria-label="Aproximar">+</button><button type="button" data-acao="zoom2-ajustar" style="font-size:13px;padding:0 8px">Ajustar</button></span>`) + '</div>' +
       (vista3d || consulta ? '' : `<details class="dobra so-edicao" id="dobra-ferr"${(dobraFerr === null ? telaLarga() : dobraFerr) ? ' open' : ''}><summary>Adicionar à planta e medidas do salão</summary><div class="dobra-corpo">` +
         '<div class="ferramentas-planta" role="toolbar" aria-label="Adicionar à planta">' +
         ORDEM_ITENS.map((t) => `<button type="button" class="ferr" data-acao="item-add" data-tipo="${t}">${glifo(t)}<span>${esc(TIPOS[t].rotulo)}</span></button>`).join('') + '</div>' +
@@ -1254,7 +1287,7 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
       '<div class="opcoes-planta"><label for="rota-proc">Mostrar processo<select id="rota-proc"><option value="">Nenhum</option>' +
       estado.processos.map((x) => `<option value="${esc(x.id)}"${x.id === procRota ? ' selected' : ''}>${esc(x.nome || 'Sem nome')}</option>`).join('') + '</select></label></div>' +
       (vista3d ? '<svg id="svg-planta-3d" class="planta-3d' + (zoom3.k > 1.001 ? ' ampliada' : '') + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Planta da loja em 3D"></svg>'
-        : '<svg id="svg-planta" class="planta-svg" xmlns="http://www.w3.org/2000/svg" tabindex="0" role="application" aria-label="Planta editável da loja"></svg>') +
+        : '<svg id="svg-planta" class="planta-svg' + (zoom2.k > 1.001 ? ' ampliada' : '') + '" xmlns="http://www.w3.org/2000/svg" tabindex="0" role="application" aria-label="Planta editável da loja"></svg><div class="sobrepostos" id="sobrepostos"></div>') +
       '<div class="legenda-cores">' + GRUPOS.filter((g) => estado.planta.itens.some((it) => grupoDe(it) === g.id)).map((g) =>
         `<span><i class="ponto" style="background:var(--g-${g.id}-f);border-color:var(--g-${g.id}-b)"></i>${esc(g.rotulo)}</span>`).join('') + '</div>' +
       (p ? '<div class="legenda-cores"><span>Quem faz:</span>' + p.raias.map((r) => `<span><i class="bolinha" style="background:${varRaia(p, r.id)}"></i>${esc(r.nome)}</span>`).join('') + '</div>' +
@@ -1414,7 +1447,7 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
         '<div class="dupla">' + num('i-w', 'Largura (m)', it.w) + num('i-h', 'Profundidade (m)', it.h) + num('i-x', 'Da parede esquerda (m)', it.x) + num('i-y', 'Da parede do fundo (m)', it.y) + '</div>' +
         (['area', 'estante', 'movel', 'caixa', 'recipiente'].indexOf(it.tipo) >= 0 ? `<p class="medida" id="i-area-g">Ocupa ${fmt(Math.round(it.w * it.h * 100) / 100)} m² do piso</p>` : '') +
         '<div class="linha-botoes"><button type="button" class="btn btn-pequeno" data-acao="item-girar">Girar 90°</button><button type="button" class="btn btn-pequeno" data-acao="item-frente">Trazer para a frente</button>' +
-        '<button type="button" class="btn btn-pequeno" data-acao="item-duplicar">Duplicar</button><button type="button" class="btn btn-pequeno btn-perigo" data-acao="item-excluir">Excluir</button></div>' +
+        (it.tipo === 'porta' ? '<button type="button" class="btn btn-pequeno" data-acao="item-abertura">Inverter abertura</button>' : '') + '<button type="button" class="btn btn-pequeno" data-acao="item-duplicar">Duplicar</button><button type="button" class="btn btn-pequeno btn-perigo" data-acao="item-excluir">Excluir</button></div>' +
         blocoFotos('item', it.id, fotosDe(it)) +
         '<h4>Etapas que acontecem aqui</h4>' + (aqui.length ? '<div class="lista-etapas">' + aqui.map((a) =>
           `<button type="button" class="linha-etapa" data-acao="etapa-editar" data-proc="${esc(a.p.id)}" data-etapa="${esc(a.t.id)}"><span class="num-etapa" style="background:${varRaia(a.p, a.t.raia)}">${a.n}</span><span>${esc(a.t.titulo)}<small>${esc(a.p.nome)}, ${esc(nomeRaia(a.p, a.t.raia))}</small></span></button>`).join('') + '</div>'
@@ -1532,10 +1565,12 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
     if (gaveta && gaveta.tipo === 'mensagem') conteudo = painelMensagem();
     if (!conteudo) gaveta = null;
     g.classList.toggle('aberta', !!conteudo);
+    g.classList.toggle('baixa', !!conteudo && gaveta.tipo === 'item' && vista === 'planta');
     g.setAttribute('aria-label', gaveta && (gaveta.tipo === 'versoes' || gaveta.tipo === 'mensagem' || consulta) ? 'Painel' : 'Painel de edição');
     if (conteudo) { g.removeAttribute('inert'); $('gaveta-cab').innerHTML = conteudo.cab; $('gaveta-corpo').innerHTML = conteudo.corpo; }
     else { g.setAttribute('inert', ''); }
     document.body.classList.toggle('com-gaveta', !!conteudo);
+    document.body.classList.toggle('com-gaveta-baixa', !!conteudo && gaveta.tipo === 'item' && vista === 'planta');
     if (consulta) travarCampos($('gaveta'));
     carregarFotos($('gaveta'));
   }
@@ -1546,7 +1581,14 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
     if (vista === 'planta') {
       const marcado = gaveta && gaveta.tipo === 'etapa' && gaveta.proc === procRota ? gaveta.id : null;
       if (vista3d) { const r = desenhar3D({ rot: rot3d, sel: selItem, proc: procDe(procRota), marcado }); base3 = r.vb; pintarSvg('svg-planta-3d', r); aplicarZoom3(); }
-      else pintarSvg('svg-planta', desenhar({ sel: selItem, proc: procDe(procRota), marcado }));
+      else {
+        const r = desenhar({ sel: selItem, proc: procDe(procRota), marcado }); base2 = r.vb; pintarSvg('svg-planta', r); aplicarZoom2();
+        // com um bloco selecionado, o navegador não rola a planta sozinho: o dedo arrasta o bloco, e fora dele a rolagem é feita aqui
+        const sv = $('svg-planta'); if (sv) sv.classList.toggle('travada', !!itemDe(selItem) && !consulta);
+        const caixa = $('sobrepostos');
+        if (caixa) caixa.innerHTML = consulta ? '' : sobreposicoes().map((q) => `<span>${esc(q.a.nome || 'Sem nome')} e ${esc(q.b.nome || 'Sem nome')} estão um sobre o outro.</span>` +
+          `<button type="button" class="btn-texto" data-acao="item-ir" data-id="${esc(q.a.id)}">Ver</button>`).join('');
+      }
     }
     const p = procAberto();
     if (p) {
@@ -1591,6 +1633,32 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
     // os nomes crescem menos que o desenho, para não cobrir a loja quando aproxima
     svg.style.setProperty('--esc3', r2(Math.pow(k, -0.55)));
     const n = $('zoom3-nivel'); if (n) n.textContent = Math.round(k * 100) + '%';
+  }
+  function aplicarZoom2() {
+    const svg = $('svg-planta');
+    if (!svg || !base2) return;
+    const k = zoom2.k, w = base2.w / k, h = base2.h / k;
+    const cx = base2.x + base2.w / 2 + zoom2.x, cy = base2.y + base2.h / 2 + zoom2.y;
+    svg.setAttribute('viewBox', [cx - w / 2, cy - h / 2, w, h].map(r2).join(' '));
+    svg.classList.toggle('ampliada', k > 1.001);
+    const n = $('zoom2-nivel'); if (n) n.textContent = Math.round(k * 100) + '%';
+  }
+  function limitarZoom2() {
+    if (!base2) return;
+    zoom2.k = limitar(zoom2.k, 1, 6);
+    const mx = base2.w / 2 * (1 - 1 / zoom2.k), my = base2.h / 2 * (1 - 1 / zoom2.k);
+    zoom2.x = limitar(zoom2.x, -mx, mx); zoom2.y = limitar(zoom2.y, -my, my);
+  }
+  function zoom2Em(fator, px, py) {
+    if (!base2) return;
+    const k0 = zoom2.k, k1 = limitar(k0 * fator, 1, 6);
+    const cx = base2.x + base2.w / 2 + zoom2.x, cy = base2.y + base2.h / 2 + zoom2.y;
+    if (px == null) { const it = itemDe(selItem); if (it) { px = it.x + it.w / 2; py = it.y + it.h / 2; } else { px = cx; py = cy; } }
+    zoom2.k = k1;
+    zoom2.x = px - (px - cx) * k0 / k1 - (base2.x + base2.w / 2);
+    zoom2.y = py - (py - cy) * k0 / k1 - (base2.y + base2.h / 2);
+    if (k1 <= 1.001) zoom2 = { k: 1, x: 0, y: 0 };
+    limitarZoom2(); aplicarZoom2();
   }
   function limitarZoom3() {
     if (!base3) return;
@@ -1922,7 +1990,7 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
   }
 
   /* ---------- ações ---------- */
-  const SO_EDICAO = ['desfazer', 'salvar', 'item-add', 'item-girar', 'item-frente', 'item-duplicar', 'item-excluir', 'proc-novo', 'proc-excluir', 'raia-add', 'raia-subir', 'raia-descer',
+  const SO_EDICAO = ['desfazer', 'salvar', 'item-add', 'item-girar', 'item-frente', 'item-duplicar', 'item-excluir', 'item-abertura', 'proc-novo', 'proc-excluir', 'raia-add', 'raia-subir', 'raia-descer',
     'raia-excluir', 'etapa-add', 'etapa-subir', 'etapa-descer', 'etapa-duplicar', 'etapa-excluir', 'saida-modo', 'saida-add', 'saida-remover', 'setor-add', 'setor-excluir',
     'foto-add', 'foto-tirar', 'versoes', 'versoes-mais', 'versao-ver', 'versao-restaurar'];
   function acao(nome, el) {
@@ -1941,6 +2009,11 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
       case 'zoom3-mais': zoomEm(1.5); break;
       case 'zoom3-menos': zoomEm(1 / 1.5); break;
       case 'zoom3-ajustar': zoom3 = { k: 1, x: 0, y: 0 }; aplicarZoom3(); break;
+      case 'zoom2-mais': zoom2Em(1.5); break;
+      case 'zoom2-menos': zoom2Em(1 / 1.5); break;
+      case 'zoom2-ajustar': zoom2 = { k: 1, x: 0, y: 0 }; aplicarZoom2(); break;
+      case 'item-ir': if (itemDe(d.id)) { selItem = d.id; gaveta = { tipo: 'item', id: d.id }; render(); acender(d.id); } break;
+      case 'item-abertura': if (it && it.tipo === 'porta') alterar(() => { it.abre = it.abre === -1 ? 1 : -1; }); break;
       case 'abrir-busca': {
         const topo = document.querySelector('.topo');
         if (topo) topo.classList.toggle('busca-aberta');
@@ -1990,9 +2063,15 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
         const c = $('i-nome-g'); if (c) { c.focus(); c.select(); }
         break;
       }
-      case 'item-girar': if (it) alterar(() => { const w = it.w; it.w = it.h; it.h = w; encaixarItem(it); }); break;
+      case 'item-girar': if (it) alterar(() => { const cx = it.x + it.w / 2, cy = it.y + it.h / 2, w = it.w; it.w = it.h; it.h = w; it.x = r2(cx - it.w / 2); it.y = r2(cy - it.h / 2); encaixarItem(it); }); break;
       case 'item-frente': if (it) alterar(() => { estado.planta.itens = estado.planta.itens.filter((x) => x !== it).concat([it]); }); break;
-      case 'item-duplicar': if (it) alterar(() => { const c = clonar(it); c.id = novoId(); c.x += 0.5; c.y += 0.5; encaixarItem(c); estado.planta.itens.push(c); selItem = c.id; gaveta = { tipo: 'item', id: c.id }; }); break;
+      case 'item-duplicar': if (it) alterar(() => {
+        const c = clonar(it), W = estado.planta.salao.w, H = estado.planta.salao.h;
+        c.id = novoId(); delete c.fotos;
+        // a cópia vai para o lado onde couber, para não ficar exatamente em cima do original
+        const lado = [[0.5, 0.5], [-0.5, 0.5], [0.5, -0.5], [-0.5, -0.5]].find((q) => it.x + q[0] >= 0 && it.x + q[0] + it.w <= W && it.y + q[1] >= 0 && it.y + q[1] + it.h <= H) || [0.5, 0.5];
+        c.x = r2(it.x + lado[0]); c.y = r2(it.y + lado[1]); encaixarItem(c); estado.planta.itens.push(c); selItem = c.id; gaveta = { tipo: 'item', id: c.id };
+      }); break;
       case 'item-excluir':
         if (!it) return;
         alterar(() => {
@@ -2125,19 +2204,14 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
     else if (c === 'i-nome' && a.it) a.it.nome = v.slice(0, 80);
     else if (['i-w', 'i-h', 'i-x', 'i-y'].indexOf(c) >= 0 && a.it) {
       const it = a.it; n = lerNumero(v);
-      if (c === 'i-w' && n > 0) { it.w = limitar(r2(n), 0.1, W); it.x = limitar(it.x, 0, Math.max(0, W - it.w)); }
-      else if (c === 'i-h' && n > 0) { it.h = limitar(r2(n), 0.1, H); it.y = limitar(it.y, 0, Math.max(0, H - it.h)); }
+      if (c === 'i-w' && n > 0) it.w = limitar(r2(n), 0.1, W);
+      else if (c === 'i-h' && n > 0) it.h = limitar(r2(n), 0.1, H);
       else if (c === 'i-x' && Number.isFinite(n)) it.x = limitar(r2(n), 0, Math.max(0, W - it.w));
       else if (c === 'i-y' && Number.isFinite(n)) it.y = limitar(r2(n), 0, Math.max(0, H - it.h));
       else return;
       const ar = $('i-area-g'); if (ar) ar.textContent = 'Ocupa ' + fmt(Math.round(it.w * it.h * 100) / 100) + ' m² do piso';
     }
-    else if (c === 'salao-w' || c === 'salao-h') {
-      n = lerNumero(v);
-      if (!(n >= 2 && n <= 80)) return;
-      if (c === 'salao-w') estado.planta.salao.w = r2(n); else estado.planta.salao.h = r2(n);
-      estado.planta.itens.forEach(encaixarItem);
-    }
+    else if (c === 'salao-w' || c === 'salao-h') return; // só vale ao sair do campo, para não deformar a planta a cada tecla
     else return;
     espelhar(el);
     autoAltura(el);
@@ -2183,9 +2257,27 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
       render();
       return;
     }
+    if (['i-w', 'i-h'].indexOf(c) >= 0 && a.it) encaixarItem(a.it);
+    let foraSalao = 0;
+    if (c === 'salao-w' || c === 'salao-h') {
+      const n = lerNumero(el.value);
+      if (n >= 2 && n <= 80) {
+        const W = c === 'salao-w' ? r2(n) : estado.planta.salao.w, H = c === 'salao-h' ? r2(n) : estado.planta.salao.h;
+        foraSalao = estado.planta.itens.filter((it) => it.x + it.w > W + 1e-6 || it.y + it.h > H + 1e-6).length;
+        estado.planta.salao.w = W; estado.planta.salao.h = H;
+        estado.planta.itens.forEach(encaixarItem);
+      }
+    }
     confirmarEdicao();
-    if (['i-w', 'i-h', 'i-x', 'i-y'].indexOf(c) >= 0 && a.it) el.value = fmt({ 'i-w': a.it.w, 'i-h': a.it.h, 'i-x': a.it.x, 'i-y': a.it.y }[c]);
-    if (c === 'salao-w' || c === 'salao-h') el.value = fmt(c === 'salao-w' ? estado.planta.salao.w : estado.planta.salao.h);
+    if (['i-w', 'i-h', 'i-x', 'i-y'].indexOf(c) >= 0 && a.it) {
+      [['i-w', a.it.w], ['i-h', a.it.h], ['i-x', a.it.x], ['i-y', a.it.y]].forEach((q) => { const x = $(q[0] + '-g'); if (x) x.value = fmt(q[1]); });
+      desenharTela();
+    }
+    if (c === 'salao-w' || c === 'salao-h') {
+      el.value = fmt(c === 'salao-w' ? estado.planta.salao.w : estado.planta.salao.h);
+      render();
+      if (foraSalao) mostrarAviso(foraSalao + (foraSalao === 1 ? ' item ficava' : ' itens ficavam') + ' fora do salão novo e foi encostado na parede. Se foi sem querer, use Desfazer.');
+    }
     // campos que mudam o que aparece em outras partes da tela (prazo vencido, situação no sistema, lista de nomes)
     if (['e-prazo', 'e-respConfirma', 'e-registro', 'e-sistema'].indexOf(c) >= 0) render();
   }
@@ -2252,27 +2344,60 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
     const alvo = ev.target, svg = alvo.closest && alvo.closest('#svg-planta');
     if (!svg) return;
     const marc = alvo.closest('[data-marcador]'), alca = alvo.closest('[data-alca]'), g = alvo.closest('[data-id]'), pt = pontoSvg(svg, ev);
+    // no celular, deslizar o dedo sobre a planta rola a tela; só o bloco já selecionado se arrasta
+    const gid = g ? g.getAttribute('data-id') : null;
+    if (ev.pointerType === 'touch' && !alca && !(gid && gid === selItem && !consulta) && !(zoom2.k > 1.001)) {
+      toque = { x: ev.clientX, y: ev.clientY, ux: ev.clientX, uy: ev.clientY, id: ev.pointerId, marc: marc ? marc.getAttribute('data-marcador') : null, gid, travada: svg.classList.contains('travada') };
+      return;
+    }
     if (marc && procRota) { ev.preventDefault(); abrirEtapa(procRota, marc.getAttribute('data-marcador')); return; }
-    if (consulta) {
+    if (consulta && !(zoom2.k > 1.001 && !g)) {
       if (g) { const id = g.getAttribute('data-id'); selItem = id; gaveta = { tipo: 'item', id }; renderGaveta(); desenharTela(); }
       else if (gaveta) { selItem = null; gaveta = null; renderGaveta(); desenharTela(); }
       return;
     }
     let it;
-    if (alca && selItem) { it = itemDe(selItem); arrItem = { modo: 'tamanho', id: it.id, p0: pt, w0: it.w, h0: it.h, antes: JSON.stringify(estado), mudou: false, svg }; }
+    if (alca && selItem) {
+      it = itemDe(selItem);
+      arrItem = { modo: 'tamanho', canto: alca.getAttribute('data-alca') || 'se', id: it.id, p0: pt, x0: it.x, y0: it.y, w0: it.w, h0: it.h, antes: JSON.stringify(estado), mudou: false, svg };
+    }
     else if (g) {
       const id = g.getAttribute('data-id');
       if (selItem !== id) { selItem = id; gaveta = { tipo: 'item', id }; renderGaveta(); desenharTela(); }
       it = itemDe(id);
       if (!it) return;
       arrItem = { modo: 'mover', id: it.id, p0: pontoSvg(svg, ev), x0: it.x, y0: it.y, antes: JSON.stringify(estado), mudou: false, svg };
+    } else if (zoom2.k > 1.001) {
+      // planta ampliada: arrastar o fundo anda pela loja; um toque sem arrastar tira a seleção
+      arrPan = { x0: ev.clientX, y0: ev.clientY, z0: { x: zoom2.x, y: zoom2.y }, mudou: false, svg };
     } else { selItem = null; gaveta = null; renderGaveta(); desenharTela(); return; }
     try { svg.setPointerCapture(ev.pointerId); } catch (e) { /* sem captura */ }
     try { svg.focus({ preventScroll: true }); } catch (e) { /* sem foco */ }
     ev.preventDefault();
   }
+  // celular: o painel do bloco ocupa a metade de baixo; rola a tela para o bloco ficar visível acima dele
+  function mostrarAcimaDoPainel(id) {
+    if (telaLarga()) return;
+    const el = document.querySelector('#svg-planta [data-id="' + id + '"]');
+    if (!el) return;
+    const r = el.getBoundingClientRect(), topo = (document.querySelector('.topo') || { offsetHeight: 56 }).offsetHeight, limite = window.innerHeight * 0.46;
+    if (r.top >= topo + 8 && r.bottom <= limite) return;
+    try { window.scrollBy({ top: r.top - topo - Math.max(12, (limite - topo - r.height) / 2), behavior: 'smooth' }); } catch (e) { /* sem rolagem */ }
+  }
   function aoMover(ev) {
     if (ponteiros3.size) { mover3(ev); return; }
+    if (toque && ev.pointerId === toque.id) {
+      if (toque.travada) { window.scrollBy(toque.ux - ev.clientX, toque.uy - ev.clientY); toque.ux = ev.clientX; toque.uy = ev.clientY; ev.preventDefault(); }
+      return;
+    }
+    if (arrPan) {
+      const r = arrPan.svg.getBoundingClientRect(), s = r.width ? (base2.w / zoom2.k) / r.width : 0;
+      if (Math.hypot(ev.clientX - arrPan.x0, ev.clientY - arrPan.y0) > 4) arrPan.mudou = true;
+      zoom2.x = arrPan.z0.x - (ev.clientX - arrPan.x0) * s; zoom2.y = arrPan.z0.y - (ev.clientY - arrPan.y0) * s;
+      limitarZoom2(); aplicarZoom2(); arrPan.svg.classList.add('arrastando');
+      ev.preventDefault();
+      return;
+    }
     if (!arrItem) return;
     const it = itemDe(arrItem.id);
     if (!it) return;
@@ -2284,9 +2409,13 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
       if (a === it.x && b === it.y) return;
       it.x = a; it.y = b;
     } else {
-      a = limitar(arred(arrItem.w0 + dx, passo), 0.2, W - it.x); b = limitar(arred(arrItem.h0 + dy, passo), 0.2, H - it.y);
-      if (a === it.w && b === it.h) return;
-      it.w = a; it.h = b;
+      const cn = arrItem.canto, mn = 0.2;
+      let esq = arrItem.x0, dir = arrItem.x0 + arrItem.w0, cima = arrItem.y0, baixo = arrItem.y0 + arrItem.h0;
+      if (cn.indexOf('e') >= 0) dir = limitar(arred(dir + dx, passo), esq + mn, W); else esq = limitar(arred(esq + dx, passo), 0, dir - mn);
+      if (cn.indexOf('s') >= 0) baixo = limitar(arred(baixo + dy, passo), cima + mn, H); else cima = limitar(arred(cima + dy, passo), 0, baixo - mn);
+      const nx = r2(esq), ny = r2(cima), nw = r2(dir - esq), nh = r2(baixo - cima);
+      if (nx === it.x && ny === it.y && nw === it.w && nh === it.h) return;
+      it.x = nx; it.y = ny; it.w = nw; it.h = nh;
     }
     arrItem.mudou = true;
     desenharTela();
@@ -2294,6 +2423,20 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
   }
   function aoSoltar(ev) {
     if (ev && ponteiros3.has(ev.pointerId)) { soltar3(ev); return; }
+    if (toque && ev && ev.pointerId === toque.id) {
+      const t0 = toque; toque = null;
+      if (Math.hypot(ev.clientX - t0.x, ev.clientY - t0.y) > 10) return; // foi rolagem, não toque
+      if (t0.marc && procRota) { abrirEtapa(procRota, t0.marc); return; }
+      if (t0.gid) { selItem = t0.gid; gaveta = { tipo: 'item', id: t0.gid }; renderGaveta(); desenharTela(); mostrarAcimaDoPainel(t0.gid); }
+      else if (gaveta && gaveta.tipo === 'item') { selItem = null; gaveta = null; renderGaveta(); desenharTela(); }
+      return;
+    }
+    if (arrPan) {
+      const a = arrPan; arrPan = null; a.svg.classList.remove('arrastando');
+      if (!a.mudou && !consulta) { selItem = null; if (gaveta && gaveta.tipo === 'item') gaveta = null; renderGaveta(); desenharTela(); }
+      else if (!a.mudou && consulta && gaveta) { selItem = null; gaveta = null; renderGaveta(); desenharTela(); }
+      return;
+    }
     if (!arrItem) return;
     const a = arrItem; arrItem = null;
     if (a.mudou && a.antes !== JSON.stringify(estado)) { registrar(a.antes); depoisDeMudar(); renderGaveta(); }
@@ -3040,9 +3183,16 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
   app.addEventListener('pointerdown', aoPressionar);
   app.addEventListener('pointermove', aoMover);
   app.addEventListener('pointerup', aoSoltar);
-  app.addEventListener('pointercancel', (ev) => { arrItem = null; soltar3(ev); });
+  app.addEventListener('pointercancel', (ev) => { arrItem = null; toque = null; if (arrPan) { arrPan.svg.classList.remove('arrastando'); arrPan = null; } soltar3(ev); });
   app.addEventListener('toggle', (ev) => { if (ev.target && ev.target.id === 'dobra-ferr') dobraFerr = ev.target.open; }, true);
   app.addEventListener('wheel', (ev) => {
+    const svg2 = ev.target.closest && ev.target.closest('#svg-planta');
+    if (svg2 && (ev.ctrlKey || ev.metaKey || zoom2.k > 1.001)) {
+      ev.preventDefault();
+      const r = svg2.getBoundingClientRect(), vb = svg2.viewBox.baseVal;
+      zoom2Em(Math.exp(-ev.deltaY * (ev.ctrlKey ? 0.01 : 0.0025)), vb.x + (ev.clientX - r.left) * (vb.width / r.width), vb.y + (ev.clientY - r.top) * (vb.height / r.height));
+      return;
+    }
     const svg = ev.target.closest && ev.target.closest('#svg-planta-3d');
     if (!svg || !(ev.ctrlKey || ev.metaKey || zoom3.k > 1.001)) return;
     // com Ctrl (ou o gesto de pinça do trackpad) aproxima; já aproximado, a rodinha também aproxima e afasta
