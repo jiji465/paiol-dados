@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:33:13.071Z",
+ "salvoEm": "2026-10-22T14:33:24.394Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -510,16 +510,6 @@
       "legenda": ""
      }
     ]
-   },
-   {
-    "id": "xmvjn54ti8205",
-    "tipo": "estante",
-    "grupo": "racao",
-    "nome": "Nova prateleira",
-    "w": 3,
-    "h": 0.6,
-    "x": 5,
-    "y": 10.75
    }
   ]
  },
