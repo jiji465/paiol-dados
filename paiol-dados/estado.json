@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:34:22.991Z",
+ "salvoEm": "2026-10-22T14:34:41.188Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -109,13 +109,7 @@
     "x": 7,
     "y": 2.75,
     "w": 1.5,
-    "h": 1,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjlsg3zknbt.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 1
    },
    {
     "id": "dispensers",
@@ -155,29 +149,17 @@
     "x": 2.3,
     "y": 4.75,
     "w": 10.5,
-    "h": 0.3,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjltak6uc63.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 0.3
    },
    {
     "id": "sementes",
     "tipo": "estante",
     "grupo": "sementes",
     "nome": "Sementes",
-    "x": 0,
-    "y": 4,
+    "x": 0.1,
+    "y": 3.9,
     "w": 0.5,
-    "h": 1.7,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjlude3zwcw.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 1.7
    },
    {
     "id": "vitrine",
@@ -187,13 +169,7 @@
     "x": 0.8,
     "y": 5.8,
     "w": 0.6,
-    "h": 1.5,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjlyie1dv1v.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 1.5
    },
    {
     "id": "medicamentos",
@@ -203,13 +179,7 @@
     "x": 0.1,
     "y": 5.9,
     "w": 0.5,
-    "h": 11.1,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjlxa59gzlx.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 11.1
    },
    {
     "id": "balcao",
@@ -219,13 +189,7 @@
     "x": 1.8,
     "y": 7.8,
     "w": 0.8,
-    "h": 6.8,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjly9puxcbt.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 6.8
    },
    {
     "id": "vendedor-1",
@@ -285,13 +249,7 @@
     "x": 3,
     "y": 14.2,
     "w": 1.8,
-    "h": 0.9,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjm6gjanwxp.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 0.9
    },
    {
     "id": "fertilizantes",
@@ -311,13 +269,7 @@
     "x": 3.6,
     "y": 6.4,
     "w": 1.4,
-    "h": 7.2,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjlzr6ayn0h.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 7.2
    },
    {
     "id": "racoes-2",
@@ -327,13 +279,7 @@
     "x": 6.2,
     "y": 6.4,
     "w": 2.4,
-    "h": 7.2,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjlzyxules7.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 7.2
    },
    {
     "id": "racoes-3",
@@ -343,21 +289,15 @@
     "x": 6.2,
     "y": 14.6,
     "w": 2.4,
-    "h": 3.2,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjm787kqlx0.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 3.2
    },
    {
     "id": "arame",
     "tipo": "estante",
     "grupo": "ferramentas",
     "nome": "Arame",
-    "x": 6.4,
-    "y": 18.6,
+    "x": 6.25,
+    "y": 18.5,
     "w": 1.6,
     "h": 1.2
    },
@@ -379,13 +319,7 @@
     "x": 9.75,
     "y": 7.25,
     "w": 1.7,
-    "h": 0.8,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjm0stlvm52.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 0.8
    },
    {
     "id": "sal-mineral",
@@ -395,13 +329,7 @@
     "x": 9.25,
     "y": 9.5,
     "w": 2.2,
-    "h": 3,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjm4lzwis2y.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 3
    },
    {
     "id": "ferramentas-parede",
@@ -411,13 +339,7 @@
     "x": 12.4,
     "y": 5.6,
     "w": 0.5,
-    "h": 10.2,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjm0z5kb6jw.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 10.2
    },
    {
     "id": "maquinas",
