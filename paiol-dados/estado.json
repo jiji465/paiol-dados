@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:37:20.275Z",
+ "salvoEm": "2026-10-22T14:37:30.321Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -172,7 +172,12 @@
     "y": 3.9,
     "w": 0.5,
     "h": 1.7,
-    "fotos": []
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjnalf8lp8b.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "vitrine",
