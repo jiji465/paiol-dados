@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:03:08.259Z",
+ "salvoEm": "2026-10-22T14:03:24.169Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -384,7 +384,12 @@
     "y": 9.5,
     "w": 2.2,
     "h": 3,
-    "fotos": []
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjm2povt45f.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "ferramentas-parede",
