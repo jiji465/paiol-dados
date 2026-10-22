@@ -443,7 +443,7 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
     texto:      { rotulo: 'Texto', nome: 'Texto', w: 3, h: 0.45, grupo: null }
   };
   const ORDEM_ITENS = ['area', 'estante', 'recipiente', 'movel', 'caixa', 'pessoa', 'porta', 'texto'];
-  const CAMADA = { area: 0, estante: 1, recipiente: 1, movel: 1, caixa: 1, texto: 2, pessoa: 3, porta: 4 };
+  const CAMADA = { area: 0, porta: 0.5, estante: 1, recipiente: 1, movel: 1, caixa: 1, texto: 2, pessoa: 3 }; // portas logo depois das paredes, para o vão não cobrir os móveis
   const GRUPOS = [
     { id: 'ferramentas', rotulo: 'Equipamentos e ferramentas' }, { id: 'aves', rotulo: 'Aves e gaiolas' },
     { id: 'selaria', rotulo: 'Selaria' }, { id: 'veterinario', rotulo: 'Medicamentos e inseticidas' },
@@ -662,6 +662,22 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
       case 'porta': {
         const est = 'stroke:' + cor('parede') + ';stroke-width:0.045';
         horiz = w >= h;
+        if (it.passagem) {
+          // passagem sem porta: só o vão na parede, com os batentes
+          const rotuloP = (tx, ty, ancora) => modoMini ? '' : '<text x="' + r2(tx) + '" y="' + r2(ty) + '" text-anchor="' + ancora +
+            '" dominant-baseline="central" style="font-family:' + fonte('titulo') + ';font-weight:600;font-size:' + (exportando ? 0.29 : 0.24) + 'px;fill:' + cor('tinta-suave') + halo + '">' + esc(it.nome) + '</text>';
+          const bt = 'stroke:' + cor('parede') + ';stroke-width:0.06';
+          if (horiz) {
+            d = cy > H / 2 ? -1 : 1;
+            c += rect(x, y - 0.12, w, h + 0.24, 'fill:' + cor('piso')) + linha(x, y - 0.12, x, y + h + 0.12, bt) + linha(x + w, y - 0.12, x + w, y + h + 0.12, bt);
+            c += rotuloP(cx, cy + d * 0.42, 'middle') + rect(x, y - 0.15, w, h + 0.3, 'fill:#000;fill-opacity:0');
+          } else {
+            d = cx > W / 2 ? -1 : 1;
+            c += rect(x - 0.12, y, w + 0.24, h, 'fill:' + cor('piso')) + linha(x - 0.12, y, x + w + 0.12, y, bt) + linha(x - 0.12, y + h, x + w + 0.12, y + h, bt);
+            c += rotuloP(cx + d * 0.3, cy, d > 0 ? 'start' : 'end') + rect(x - 0.15, y, w + 0.3, h, 'fill:#000;fill-opacity:0');
+          }
+          break;
+        }
         const rotulo = (tx, ty, ancora) => modoMini ? '' : '<text x="' + r2(tx) + '" y="' + r2(ty) + '" text-anchor="' + ancora +
           '" dominant-baseline="central" style="font-family:' + fonte('titulo') + ';font-weight:600;font-size:' + (exportando ? 0.29 : 0.24) + 'px;fill:' + cor('tinta-suave') + halo + '">' + esc(it.nome) + '</text>';
         if (horiz) {
@@ -894,18 +910,18 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
     const portasLonge = { u: [], v: [] }, vaos = { u: [], v: [] };
     estado.planta.itens.filter((it) => it.tipo === 'porta').forEach((it) => {
       const b = caixaGirada(g, it.x, it.y, it.w, it.h), cu = (b.u0 + b.u1) / 2, cv = (b.v0 + b.v1) / 2;
-      if (b.v1 <= perto) { portasLonge.v.push([b.u0, b.u1]); rotulo(it.nome, cu, 0.35, 0.02, 0.26, cor('tinta-suave'), 600); }
-      else if (b.u1 <= perto) { portasLonge.u.push([b.v0, b.v1]); rotulo(it.nome, 0.35, cv, 0.02, 0.26, cor('tinta-suave'), 600); }
+      if (b.v1 <= perto) { portasLonge.v.push([b.u0, b.u1, !!it.passagem]); rotulo(it.nome, cu, 0.35, 0.02, 0.26, cor('tinta-suave'), 600); }
+      else if (b.u1 <= perto) { portasLonge.u.push([b.v0, b.v1, !!it.passagem]); rotulo(it.nome, 0.35, cv, 0.02, 0.26, cor('tinta-suave'), 600); }
       else if (b.v0 >= V - perto) { vaos.v.push([b.u0, b.u1]); s += poli3([[b.u0, V - 0.25, 0.005], [b.u1, V - 0.25, 0.005], [b.u1, V, 0.005], [b.u0, V, 0.005]], 'fill:' + cor('acento') + ';fill-opacity:0.35;stroke:none'); rotulo(it.nome, cu, V - 0.6, 0.02, 0.3, cor('tinta-suave'), 700); }
       else if (b.u0 >= U - perto) { vaos.u.push([b.v0, b.v1]); s += poli3([[U - 0.25, b.v0, 0.005], [U, b.v0, 0.005], [U, b.v1, 0.005], [U - 0.25, b.v1, 0.005]], 'fill:' + cor('acento') + ';fill-opacity:0.35;stroke:none'); rotulo(it.nome, U - 0.6, cv, 0.02, 0.3, cor('tinta-suave'), 700); }
-      else { s += poli3([[b.u0, b.v0, 0.005], [b.u1, b.v0, 0.005], [b.u1, b.v1, 0.005], [b.u0, b.v1, 0.005]], 'fill:' + COR_PORTA + ';fill-opacity:0.6;stroke:none'); rotulo(it.nome, cu, cv, 0.02, 0.22, cor('tinta-suave'), 600); }
+      else { if (!it.passagem) s += poli3([[b.u0, b.v0, 0.005], [b.u1, b.v0, 0.005], [b.u1, b.v1, 0.005], [b.u0, b.v1, 0.005]], 'fill:' + COR_PORTA + ';fill-opacity:0.6;stroke:none'); rotulo(it.nome, cu, cv, 0.02, 0.22, cor('tinta-suave'), 600); }
     });
     // paredes do fundo, altas, com as portas desenhadas
     const parede = cor('linha-forte'), paredeBorda = cor('parede');
     objs.push({ u0: -t, u1: 0, v0: -t, v1: V, camada: 0, d: () => bloco3({ u0: -t, u1: 0, v0: -t, v1: V, z0: 0, z1: ALT_PAREDE }, parede, paredeBorda, { topo: cor('parede') }) +
-      portasLonge.u.map((p) => poli3([[0, p[0], 0], [0, p[1], 0], [0, p[1], 2.1], [0, p[0], 2.1]], 'fill:' + COR_PORTA + ';stroke:' + paredeBorda + ';stroke-width:0.02')).join('') });
+      portasLonge.u.map((p) => poli3([[0, p[0], 0], [0, p[1], 0], [0, p[1], 2.1], [0, p[0], 2.1]], 'fill:' + (p[2] ? cor('piso') : COR_PORTA) + ';stroke:' + paredeBorda + ';stroke-width:0.02')).join('') });
     objs.push({ u0: 0, u1: U + t, v0: -t, v1: 0, camada: 0, d: () => bloco3({ u0: 0, u1: U + t, v0: -t, v1: 0, z0: 0, z1: ALT_PAREDE }, parede, paredeBorda, { topo: cor('parede') }) +
-      portasLonge.v.map((p) => poli3([[p[0], 0, 0], [p[1], 0, 0], [p[1], 0, 2.1], [p[0], 0, 2.1]], 'fill:' + COR_PORTA + ';stroke:' + paredeBorda + ';stroke-width:0.02')).join('') });
+      portasLonge.v.map((p) => poli3([[p[0], 0, 0], [p[1], 0, 0], [p[1], 0, 2.1], [p[0], 0, 2.1]], 'fill:' + (p[2] ? cor('piso') : COR_PORTA) + ';stroke:' + paredeBorda + ';stroke-width:0.02')).join('') });
     // paredes da frente, baixas, para ver o interior; os vãos das entradas ficam abertos
     const trechos = (total, vs) => {
       const lista = []; let ini = 0;
@@ -915,6 +931,14 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
     };
     trechos(V, vaos.u).forEach((tr) => objs.push({ u0: U, u1: U + t, v0: tr[0], v1: tr[1], camada: 3, d: () => bloco3({ u0: U, u1: U + t, v0: tr[0], v1: tr[1], z0: 0, z1: 0.3 }, parede, paredeBorda) }));
     trechos(U + t, vaos.v).forEach((tr) => objs.push({ u0: tr[0], u1: tr[1], v0: V, v1: V + t, camada: 3, d: () => bloco3({ u0: tr[0], u1: tr[1], v0: V, v1: V + t, z0: 0, z1: 0.3 }, parede, paredeBorda) }));
+    // trechos de uma parede de sala que sobram depois de abrir o vão das portas e passagens que estão sobre ela
+    const portas2 = estado.planta.itens.filter((x) => x.tipo === 'porta');
+    const semVao = (l, horiz) => {
+      const ini = horiz ? l[0] : l[1], fim = ini + (horiz ? l[2] : l[3]), meio = horiz ? l[1] + l[3] / 2 : l[0] + l[2] / 2;
+      const vs = portas2.filter((q) => (horiz ? q.y : q.x) <= meio + 0.25 && (horiz ? q.y + q.h : q.x + q.w) >= meio - 0.25)
+        .map((q) => (horiz ? [q.x, q.x + q.w] : [q.y, q.y + q.h])).filter((v) => v[1] > ini && v[0] < fim).map((v) => [Math.max(0, v[0] - ini), Math.min(fim - ini, v[1] - ini)]);
+      return trechos(fim - ini, vs).filter((tr) => tr[1] - tr[0] > 0.02).map((tr) => (horiz ? [l[0] + tr[0], l[1], tr[1] - tr[0], l[3]] : [l[0], l[1] + tr[0], l[2], tr[1] - tr[0]]));
+    };
     // salas: piso colorido e paredes divisórias baixas
     estado.planta.itens.filter((it) => it.tipo === 'area').forEach((it) => {
       const b = caixaGirada(g, it.x, it.y, it.w, it.h), f = corGrupo(it, 'f');
@@ -922,10 +946,10 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
       rotulo(it.nome, (b.u0 + b.u1) / 2, (b.v0 + b.v1) / 2, 0.02, Math.max(0.3, Math.min(0.4, (b.u1 - b.u0) / 4)), cor('tinta'), 800, (b.u1 - b.u0) * (b.v1 - b.v0));
       const e = 0.1, h2 = 1.2, borda = (a, c) => Math.abs(a - c) < 0.08;
       const lados = [];
-      if (!borda(it.y, 0)) lados.push([it.x, it.y - e / 2, it.w, e]);
-      if (!borda(it.y + it.h, H)) lados.push([it.x, it.y + it.h - e / 2, it.w, e]);
-      if (!borda(it.x, 0)) lados.push([it.x - e / 2, it.y, e, it.h]);
-      if (!borda(it.x + it.w, W)) lados.push([it.x + it.w - e / 2, it.y, e, it.h]);
+      if (!borda(it.y, 0)) lados.push(...semVao([it.x, it.y - e / 2, it.w, e], true));
+      if (!borda(it.y + it.h, H)) lados.push(...semVao([it.x, it.y + it.h - e / 2, it.w, e], true));
+      if (!borda(it.x, 0)) lados.push(...semVao([it.x - e / 2, it.y, e, it.h], false));
+      if (!borda(it.x + it.w, W)) lados.push(...semVao([it.x + it.w - e / 2, it.y, e, it.h], false));
       lados.forEach((l) => { const c = caixaGirada(g, l[0], l[1], l[2], l[3]); objs.push(Object.assign({ camada: 1, d: () => bloco3(Object.assign({ z0: 0, z1: h2 }, c), cor('painel'), paredeBorda, { sw: 0.02 }) }, c)); });
     });
     // sombra no piso das prateleiras altas, para mostrar onde ficam
@@ -1137,7 +1161,7 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
 
   /* ---------- estrutura da página ---------- */
   function glifo(t) {
-    const g = TIPOS[t].grupo, f = g ? 'var(--g-' + g + '-f)' : 'none', b = g ? 'var(--g-' + g + '-b)' : 'var(--parede)';
+    const g = TIPOS[t] ? TIPOS[t].grupo : null, f = g ? 'var(--g-' + g + '-f)' : 'none', b = g ? 'var(--g-' + g + '-b)' : 'var(--parede)';
     const s = 'style="fill:' + f + ';stroke:' + b + ';stroke-width:1.5"';
     const corpo = {
       area: '<rect x="2" y="2" width="22" height="16" style="fill:' + f + ';stroke:var(--parede);stroke-width:2.4"/>',
@@ -1147,6 +1171,7 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
       caixa: '<rect x="1" y="6" width="24" height="8" rx="1" ' + s + '/><rect x="17" y="8" width="5" height="4" style="fill:none;stroke:' + b + ';stroke-width:1"/>',
       pessoa: '<circle cx="13" cy="10" r="7" ' + s + '/><circle cx="13" cy="10" r="3.2" style="fill:' + b + '"/>',
       porta: '<path d="M2 18h22" style="stroke:var(--parede);stroke-width:2.4"/><path d="M5 18V5" style="stroke:var(--parede);stroke-width:1.6"/><path d="M5 5A13 13 0 0 1 18 18" style="fill:none;stroke:var(--tinta-suave);stroke-width:1;stroke-dasharray:2 1.5"/>',
+      passagem: '<path d="M1 12h7M18 12h7" style="stroke:var(--parede);stroke-width:2.4"/><path d="M8 7v10M18 7v10" style="stroke:var(--parede);stroke-width:1.6"/>',
       texto: '<text x="13" y="15" text-anchor="middle" style="font-family:var(--f-titulo);font-weight:700;font-size:13px;fill:var(--tinta-suave)">Aa</text>'
     }[t];
     return '<svg viewBox="0 0 26 20" aria-hidden="true">' + corpo + '</svg>';
@@ -1280,7 +1305,8 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
         : `<span class="zoom3" role="group" aria-label="Aproximar a planta"><button type="button" data-acao="zoom2-menos" aria-label="Afastar">−</button><span id="zoom2-nivel">${Math.round(zoom2.k * 100)}%</span><button type="button" data-acao="zoom2-mais" aria-label="Aproximar">+</button><button type="button" data-acao="zoom2-ajustar" style="font-size:13px;padding:0 8px">Ajustar</button></span>`) + '</div>' +
       (vista3d || consulta ? '' : `<details class="dobra so-edicao" id="dobra-ferr"${(dobraFerr === null ? telaLarga() : dobraFerr) ? ' open' : ''}><summary>Adicionar à planta e medidas do salão</summary><div class="dobra-corpo">` +
         '<div class="ferramentas-planta" role="toolbar" aria-label="Adicionar à planta">' +
-        ORDEM_ITENS.map((t) => `<button type="button" class="ferr" data-acao="item-add" data-tipo="${t}">${glifo(t)}<span>${esc(TIPOS[t].rotulo)}</span></button>`).join('') + '</div>' +
+        ORDEM_ITENS.map((t) => `<button type="button" class="ferr" data-acao="item-add" data-tipo="${t}">${glifo(t)}<span>${esc(TIPOS[t].rotulo)}</span></button>`).join('') +
+        `<button type="button" class="ferr" data-acao="item-add" data-tipo="porta" data-passagem="1">${glifo('passagem')}<span>Passagem sem porta</span></button>` + '</div>' +
         `<div class="opcoes-planta"><label for="salao-w">Salão<input type="text" id="salao-w" data-campo="salao-w" inputmode="decimal" autocomplete="off" value="${fmt(estado.planta.salao.w)}" aria-label="Largura do salão em metros"></label>` +
         `<label for="salao-h">por<input type="text" id="salao-h" data-campo="salao-h" inputmode="decimal" autocomplete="off" value="${fmt(estado.planta.salao.h)}" aria-label="Profundidade do salão em metros"> m</label>` +
         `<label for="encaixar"><input type="checkbox" id="encaixar"${encaixar ? ' checked' : ''}> Encaixar a cada 0,25 m</label></div></div></details>`) +
@@ -1444,10 +1470,11 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
       corpo: `<label class="campo" for="i-nome-g">Nome<input type="text" id="i-nome-g" data-campo="i-nome" data-item="${esc(it.id)}" maxlength="80" autocomplete="off" value="${esc(it.nome)}"></label>` +
         `<div class="dupla"><label class="campo" for="i-tipo-g">Tipo<select id="i-tipo-g" data-campo="i-tipo" data-item="${esc(it.id)}">${ORDEM_ITENS.map((k) => `<option value="${k}"${k === it.tipo ? ' selected' : ''}>${esc(TIPOS[k].rotulo)}</option>`).join('')}</select></label>` +
         (t2.grupo === null ? '<span></span>' : `<label class="campo" for="i-grupo-g">Setor ou cor<select id="i-grupo-g" data-campo="i-grupo" data-item="${esc(it.id)}">${GRUPOS.map((x) => `<option value="${x.id}"${x.id === g ? ' selected' : ''}>${esc(x.rotulo)}</option>`).join('')}</select></label>`) + '</div>' +
+        (it.tipo === 'porta' ? `<label class="campo" for="i-passagem-g">Abertura<select id="i-passagem-g" data-campo="i-passagem" data-item="${esc(it.id)}"><option value="porta"${it.passagem ? '' : ' selected'}>Porta (com folha que abre)</option><option value="passagem"${it.passagem ? ' selected' : ''}>Passagem sem porta</option></select></label>` : '') +
         '<div class="dupla">' + num('i-w', 'Largura (m)', it.w) + num('i-h', 'Profundidade (m)', it.h) + num('i-x', 'Da parede esquerda (m)', it.x) + num('i-y', 'Da parede do fundo (m)', it.y) + '</div>' +
         (['area', 'estante', 'movel', 'caixa', 'recipiente'].indexOf(it.tipo) >= 0 ? `<p class="medida" id="i-area-g">Ocupa ${fmt(Math.round(it.w * it.h * 100) / 100)} m² do piso</p>` : '') +
         '<div class="linha-botoes"><button type="button" class="btn btn-pequeno" data-acao="item-girar">Girar 90°</button><button type="button" class="btn btn-pequeno" data-acao="item-frente">Trazer para a frente</button>' +
-        (it.tipo === 'porta' ? '<button type="button" class="btn btn-pequeno" data-acao="item-abertura">Inverter abertura</button>' : '') + '<button type="button" class="btn btn-pequeno" data-acao="item-duplicar">Duplicar</button><button type="button" class="btn btn-pequeno btn-perigo" data-acao="item-excluir">Excluir</button></div>' +
+        (it.tipo === 'porta' && !it.passagem ? '<button type="button" class="btn btn-pequeno" data-acao="item-abertura">Inverter abertura</button>' : '') + '<button type="button" class="btn btn-pequeno" data-acao="item-duplicar">Duplicar</button><button type="button" class="btn btn-pequeno btn-perigo" data-acao="item-excluir">Excluir</button></div>' +
         blocoFotos('item', it.id, fotosDe(it)) +
         '<h4>Etapas que acontecem aqui</h4>' + (aqui.length ? '<div class="lista-etapas">' + aqui.map((a) =>
           `<button type="button" class="linha-etapa" data-acao="etapa-editar" data-proc="${esc(a.p.id)}" data-etapa="${esc(a.t.id)}"><span class="num-etapa" style="background:${varRaia(a.p, a.t.raia)}">${a.n}</span><span>${esc(a.t.titulo)}<small>${esc(a.p.nome)}, ${esc(nomeRaia(a.p, a.t.raia))}</small></span></button>`).join('') + '</div>'
@@ -2057,7 +2084,8 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
       case 'item-add': {
         const tp = TIPOS[d.tipo], id = novoId();
         alterar(() => {
-          const novo = { id, tipo: d.tipo, grupo: tp.grupo, nome: tp.nome, w: tp.w, h: tp.h, x: arred(estado.planta.salao.w / 2 - tp.w / 2, 0.25), y: arred(estado.planta.salao.h / 2 - tp.h / 2, 0.25) };
+          const novo = { id, tipo: d.tipo, grupo: tp.grupo, nome: d.passagem ? 'Passagem' : tp.nome, w: tp.w, h: tp.h, x: arred(estado.planta.salao.w / 2 - tp.w / 2, 0.25), y: arred(estado.planta.salao.h / 2 - tp.h / 2, 0.25) };
+          if (d.passagem) novo.passagem = true;
           encaixarItem(novo); estado.planta.itens.push(novo); selItem = id; gaveta = { tipo: 'item', id };
         });
         const c = $('i-nome-g'); if (c) { c.focus(); c.select(); }
@@ -2252,6 +2280,7 @@ input.cel[type="date"]{font-family:var(--f-medida);font-size:13.5px}
       else if (a.t && c === 'saida-para' && Array.isArray(a.t.saidas) && a.t.saidas[Number(el.dataset.i)]) a.t.saidas[Number(el.dataset.i)].para = el.value;
       else if (a.it && c === 'i-tipo') { a.it.tipo = el.value; const g = TIPOS[a.it.tipo].grupo; if (g === null) a.it.grupo = null; else if (!a.it.grupo) a.it.grupo = g; }
       else if (a.it && c === 'i-grupo') a.it.grupo = el.value;
+      else if (a.it && c === 'i-passagem') { if (el.value === 'passagem') { a.it.passagem = true; if (a.it.nome === 'Porta') a.it.nome = 'Passagem'; } else { delete a.it.passagem; if (a.it.nome === 'Passagem') a.it.nome = 'Porta'; } }
       else return;
       if (antes !== JSON.stringify(estado)) { registrar(antes); depoisDeMudar(); }
       render();
