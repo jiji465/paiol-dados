@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T13:55:25.151Z",
+ "salvoEm": "2026-10-22T13:55:37.509Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -162,8 +162,8 @@
     "tipo": "estante",
     "grupo": "sementes",
     "nome": "Sementes",
-    "x": 0.1,
-    "y": 3.9,
+    "x": 0,
+    "y": 4,
     "w": 0.5,
     "h": 1.7
    },
