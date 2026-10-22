@@ -1,0 +1,844 @@
+{
+ "v": 4,
+ "salvoEm": "2026-10-21T19:48:59.895Z",
+ "planta": {
+  "salao": {
+   "w": 13,
+   "h": 22
+  },
+  "itens": [
+   {
+    "id": "granel-area",
+    "tipo": "area",
+    "grupo": "racao",
+    "nome": "Granel",
+    "x": 11.4,
+    "y": 0,
+    "w": 1.6,
+    "h": 4.6
+   },
+   {
+    "id": "porta-fundos-1",
+    "tipo": "porta",
+    "grupo": null,
+    "nome": "Porta",
+    "x": 1.5,
+    "y": 0.5,
+    "w": 0.2,
+    "h": 1
+   },
+   {
+    "id": "porta-fundos-2",
+    "tipo": "porta",
+    "grupo": null,
+    "nome": "Porta",
+    "x": 3.75,
+    "y": 0,
+    "w": 0.9,
+    "h": 0.2
+   },
+   {
+    "id": "caixa",
+    "tipo": "caixa",
+    "grupo": "caixa",
+    "nome": "Caixa",
+    "x": 1.5,
+    "y": 2.75,
+    "w": 2.6,
+    "h": 0.7
+   },
+   {
+    "id": "operador",
+    "tipo": "pessoa",
+    "grupo": "equipe",
+    "nome": "Operador do caixa",
+    "x": 2.7,
+    "y": 2.25,
+    "w": 0.2,
+    "h": 0.25
+   },
+   {
+    "id": "calcados-fundo",
+    "tipo": "estante",
+    "grupo": "calcados",
+    "nome": "Botas e chapéus",
+    "x": 5.75,
+    "y": 0,
+    "w": 5.5,
+    "h": 0.5
+   },
+   {
+    "id": "calcados-lateral",
+    "tipo": "estante",
+    "grupo": "calcados",
+    "nome": "Botas e cintos",
+    "x": 10.8,
+    "y": 0.7,
+    "w": 0.5,
+    "h": 3.7
+   },
+   {
+    "id": "provar-bota",
+    "tipo": "movel",
+    "grupo": "calcados",
+    "nome": "Poltrona para provar",
+    "x": 7,
+    "y": 2.75,
+    "w": 1.5,
+    "h": 1
+   },
+   {
+    "id": "dispensers",
+    "tipo": "estante",
+    "grupo": "racao",
+    "nome": "Ração a granel (dispensers)",
+    "x": 11.5,
+    "y": 0.1,
+    "w": 1.4,
+    "h": 0.5
+   },
+   {
+    "id": "balanca",
+    "tipo": "movel",
+    "grupo": "atendimento",
+    "nome": "Balança",
+    "x": 11.7,
+    "y": 1.6,
+    "w": 1.1,
+    "h": 0.7
+   },
+   {
+    "id": "pet",
+    "tipo": "estante",
+    "grupo": "pet",
+    "nome": "Pet",
+    "x": 11.8,
+    "y": 3.7,
+    "w": 0.7,
+    "h": 0.7
+   },
+   {
+    "id": "gaiolas",
+    "tipo": "estante",
+    "grupo": "aves",
+    "nome": "Gaiolas (prateleira alta)",
+    "x": 2.3,
+    "y": 4.75,
+    "w": 10.5,
+    "h": 0.3
+   },
+   {
+    "id": "sementes",
+    "tipo": "estante",
+    "grupo": "sementes",
+    "nome": "Sementes",
+    "x": 0.1,
+    "y": 3.9,
+    "w": 0.5,
+    "h": 1.7
+   },
+   {
+    "id": "vitrine",
+    "tipo": "movel",
+    "grupo": "veterinario",
+    "nome": "Vitrine",
+    "x": 0.8,
+    "y": 5.8,
+    "w": 0.6,
+    "h": 1.5
+   },
+   {
+    "id": "medicamentos",
+    "tipo": "estante",
+    "grupo": "veterinario",
+    "nome": "Medicamentos veterinários e inseticida",
+    "x": 0.1,
+    "y": 5.9,
+    "w": 0.5,
+    "h": 11.1
+   },
+   {
+    "id": "balcao",
+    "tipo": "movel",
+    "grupo": "atendimento",
+    "nome": "Balcão de atendimento",
+    "x": 1.8,
+    "y": 7.8,
+    "w": 0.8,
+    "h": 6.8
+   },
+   {
+    "id": "vendedor-1",
+    "tipo": "pessoa",
+    "grupo": "equipe",
+    "nome": "Vendedor",
+    "x": 1,
+    "y": 8.8,
+    "w": 0.45,
+    "h": 0.45
+   },
+   {
+    "id": "vendedor-2",
+    "tipo": "pessoa",
+    "grupo": "equipe",
+    "nome": "Vendedor",
+    "x": 1,
+    "y": 11,
+    "w": 0.45,
+    "h": 0.45
+   },
+   {
+    "id": "vendedor-3",
+    "tipo": "pessoa",
+    "grupo": "equipe",
+    "nome": "Vendedor",
+    "x": 1,
+    "y": 13.2,
+    "w": 0.45,
+    "h": 0.45
+   },
+   {
+    "id": "selaria",
+    "tipo": "estante",
+    "grupo": "selaria",
+    "nome": "Selaria",
+    "x": 0.1,
+    "y": 17.4,
+    "w": 0.5,
+    "h": 3.8
+   },
+   {
+    "id": "passaros",
+    "tipo": "estante",
+    "grupo": "aves",
+    "nome": "Pássaros",
+    "x": 6.25,
+    "y": 21,
+    "w": 0.8,
+    "h": 0.8
+   },
+   {
+    "id": "suplementos",
+    "tipo": "estante",
+    "grupo": "veterinario",
+    "nome": "Suplementos e vermífugos",
+    "x": 3,
+    "y": 14.2,
+    "w": 1.8,
+    "h": 0.9
+   },
+   {
+    "id": "fertilizantes",
+    "tipo": "estante",
+    "grupo": "racao",
+    "nome": "Adubos e substratos",
+    "x": 3,
+    "y": 15.7,
+    "w": 1.8,
+    "h": 3.2
+   },
+   {
+    "id": "racoes-1",
+    "tipo": "estante",
+    "grupo": "racao",
+    "nome": "Rações (paletes)",
+    "x": 3.6,
+    "y": 6.4,
+    "w": 1.4,
+    "h": 7.2
+   },
+   {
+    "id": "racoes-2",
+    "tipo": "estante",
+    "grupo": "racao",
+    "nome": "Rações (paletes)",
+    "x": 6.2,
+    "y": 6.4,
+    "w": 2.4,
+    "h": 7.2
+   },
+   {
+    "id": "racoes-3",
+    "tipo": "estante",
+    "grupo": "racao",
+    "nome": "Rações (paletes)",
+    "x": 6.2,
+    "y": 14.6,
+    "w": 2.4,
+    "h": 3.2
+   },
+   {
+    "id": "arame",
+    "tipo": "estante",
+    "grupo": "ferramentas",
+    "nome": "Arame",
+    "x": 6.4,
+    "y": 18.6,
+    "w": 1.6,
+    "h": 1.2
+   },
+   {
+    "id": "txt-corredor",
+    "tipo": "texto",
+    "grupo": null,
+    "nome": "Corredor",
+    "x": 5.05,
+    "y": 10.5,
+    "w": 1.1,
+    "h": 0.4
+   },
+   {
+    "id": "mesa",
+    "tipo": "movel",
+    "grupo": "atendimento",
+    "nome": "Mesa de atendimento",
+    "x": 9.75,
+    "y": 7.25,
+    "w": 1.7,
+    "h": 0.8
+   },
+   {
+    "id": "sal-mineral",
+    "tipo": "estante",
+    "grupo": "racao",
+    "nome": "Sal mineral (paletes)",
+    "x": 9.5,
+    "y": 10.5,
+    "w": 2.2,
+    "h": 3
+   },
+   {
+    "id": "ferramentas-parede",
+    "tipo": "estante",
+    "grupo": "ferramentas",
+    "nome": "Equipamentos e cerca elétrica",
+    "x": 12.4,
+    "y": 5.6,
+    "w": 0.5,
+    "h": 10.2
+   },
+   {
+    "id": "maquinas",
+    "tipo": "estante",
+    "grupo": "ferramentas",
+    "nome": "Máquinas",
+    "x": 9.75,
+    "y": 16.5,
+    "w": 1.7,
+    "h": 3
+   },
+   {
+    "id": "rocadeiras",
+    "tipo": "estante",
+    "grupo": "ferramentas",
+    "nome": "Pulverizadores e roçadeiras",
+    "x": 12.4,
+    "y": 16.2,
+    "w": 0.5,
+    "h": 5
+   },
+   {
+    "id": "entrada-principal",
+    "tipo": "porta",
+    "grupo": null,
+    "nome": "Entrada 1",
+    "x": 2.2,
+    "y": 21.8,
+    "w": 3,
+    "h": 0.2
+   },
+   {
+    "id": "entrada-2",
+    "tipo": "porta",
+    "grupo": null,
+    "nome": "Entrada 2",
+    "x": 8,
+    "y": 21.8,
+    "w": 3,
+    "h": 0.2
+   },
+   {
+    "id": "xmviivt44cy6n",
+    "tipo": "area",
+    "grupo": "apoio",
+    "nome": "Banheiro",
+    "w": 1.5,
+    "h": 2.5,
+    "x": 0,
+    "y": 0
+   }
+  ]
+ },
+ "setores": [
+  {
+   "id": "s-equip",
+   "nome": "Equipamentos e ferramentas",
+   "local": "Logo na entrada",
+   "produtos": "Roçadeiras, pulverizadores, pás e ferramentas manuais, telas.",
+   "atendimento": "",
+   "observacoes": ""
+  },
+  {
+   "id": "s-aves",
+   "nome": "Aves e gaiolas",
+   "local": "Junto à entrada",
+   "produtos": "Gaiolas e passarinhos.",
+   "atendimento": "",
+   "observacoes": ""
+  },
+  {
+   "id": "s-selaria",
+   "nome": "Selaria",
+   "local": "Parede lateral, com as selas no alto",
+   "produtos": "Cordas, selas e artigos para cavalo.",
+   "atendimento": "",
+   "observacoes": ""
+  },
+  {
+   "id": "s-medic",
+   "nome": "Medicamentos e inseticidas",
+   "local": "Prateleiras atrás do balcão dos vendedores",
+   "produtos": "Medicamentos veterinários e inseticidas.",
+   "atendimento": "Vendedores no balcão",
+   "observacoes": ""
+  },
+  {
+   "id": "s-racoes",
+   "nome": "Rações e fertilizantes",
+   "local": "Paletes no salão",
+   "produtos": "Rações e fertilizantes em sacos.",
+   "atendimento": "",
+   "observacoes": ""
+  },
+  {
+   "id": "s-pet",
+   "nome": "Pet",
+   "local": "",
+   "produtos": "Ração para cachorro, comedouros e alimentos em lata.",
+   "atendimento": "",
+   "observacoes": ""
+  },
+  {
+   "id": "s-calcados",
+   "nome": "Calçados e vestuário",
+   "local": "Área com lugar para provar a bota",
+   "produtos": "Botas, chapéus e carteiras.",
+   "atendimento": "O vendedor atende ali mesmo",
+   "observacoes": ""
+  },
+  {
+   "id": "s-sementes",
+   "nome": "Sementes",
+   "local": "No corredor que leva ao caixa",
+   "produtos": "Sementes, com inseticidas ao lado.",
+   "atendimento": "",
+   "observacoes": ""
+  },
+  {
+   "id": "s-balcao",
+   "nome": "Balcão de atendimento",
+   "local": "Em frente aos medicamentos",
+   "produtos": "Os vendedores atendem o cliente.",
+   "atendimento": "Vendedores",
+   "observacoes": ""
+  },
+  {
+   "id": "s-caixa",
+   "nome": "Caixa",
+   "local": "No fim do percurso do cliente",
+   "produtos": "O cliente paga.",
+   "atendimento": "Operador do caixa",
+   "observacoes": ""
+  }
+ ],
+ "processos": [
+  {
+   "id": "venda-balcao",
+   "nome": "Venda no balcão",
+   "objetivo": "Do atendimento ao pagamento: como o cliente compra na loja.",
+   "raias": [
+    {
+     "id": "cliente",
+     "nome": "Cliente"
+    },
+    {
+     "id": "vendedores",
+     "nome": "Vendedores"
+    },
+    {
+     "id": "caixa",
+     "nome": "Caixa"
+    },
+    {
+     "id": "deposito",
+     "nome": "Depósito"
+    }
+   ],
+   "etapas": [
+    {
+     "id": "vb1",
+     "titulo": "Cliente entra na loja",
+     "tipo": "inicio",
+     "raia": "cliente",
+     "quem": "",
+     "local": "entrada-principal",
+     "registro": "",
+     "detalhe": "A loja tem duas fachadas de entrada.",
+     "situacao": "ok",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "vb2",
+     "titulo": "Atende o cliente",
+     "tipo": "etapa",
+     "raia": "vendedores",
+     "quem": "Vendedor",
+     "local": "balcao",
+     "registro": "",
+     "detalhe": "No balcão em frente aos medicamentos. Nos calçados, o vendedor atende junto ao lugar de provar a bota.",
+     "situacao": "ok",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "vb3",
+     "titulo": "Lança o pedido no sistema",
+     "tipo": "etapa",
+     "raia": "vendedores",
+     "quem": "Vendedor",
+     "local": "balcao",
+     "registro": "Pedido",
+     "detalhe": "Confirmar como o pedido chega ao caixa.",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "vb4",
+     "titulo": "Segue pelo corredor até o caixa",
+     "tipo": "etapa",
+     "raia": "cliente",
+     "quem": "",
+     "local": "sementes",
+     "registro": "",
+     "detalhe": "No caminho passa pelas sementes e pelos inseticidas.",
+     "situacao": "ok",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "vb5",
+     "titulo": "Recebe o pagamento",
+     "tipo": "etapa",
+     "raia": "caixa",
+     "quem": "Operador do caixa",
+     "local": "caixa",
+     "registro": "",
+     "detalhe": "",
+     "situacao": "ok",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "vb6",
+     "titulo": "Emite a nota fiscal",
+     "tipo": "etapa",
+     "raia": "caixa",
+     "quem": "Operador do caixa",
+     "local": "caixa",
+     "registro": "NFC-e ou NF-e",
+     "detalhe": "",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "vb7",
+     "titulo": "Tem mercadoria para retirar no depósito?",
+     "tipo": "decisao",
+     "raia": "caixa",
+     "quem": "",
+     "local": "caixa",
+     "registro": "",
+     "detalhe": "Sacaria e itens grandes.",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": [
+      {
+       "para": "vb8",
+       "rotulo": "Sim"
+      },
+      {
+       "para": "vb9",
+       "rotulo": "Não"
+      }
+     ]
+    },
+    {
+     "id": "vb8",
+     "titulo": "Separa e entrega a mercadoria",
+     "tipo": "etapa",
+     "raia": "deposito",
+     "quem": "",
+     "local": "",
+     "registro": "",
+     "detalhe": "",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "vb9",
+     "titulo": "Cliente sai com a compra",
+     "tipo": "fim",
+     "raia": "cliente",
+     "quem": "",
+     "local": "entrada-principal",
+     "registro": "",
+     "detalhe": "",
+     "situacao": "ok",
+     "resposta": "",
+     "saidas": null
+    }
+   ]
+  },
+  {
+   "id": "venda-granel",
+   "nome": "Venda de ração a granel",
+   "objetivo": "Venda no peso, com cada marca no seu cadastro e no seu recipiente.",
+   "raias": [
+    {
+     "id": "cliente",
+     "nome": "Cliente"
+    },
+    {
+     "id": "vendedores",
+     "nome": "Vendedores"
+    },
+    {
+     "id": "caixa",
+     "nome": "Caixa"
+    }
+   ],
+   "etapas": [
+    {
+     "id": "vg1",
+     "titulo": "Pede ração no peso",
+     "tipo": "inicio",
+     "raia": "cliente",
+     "quem": "",
+     "local": "balanca",
+     "registro": "",
+     "detalhe": "Diz a marca e a quantidade em quilos.",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "vg2",
+     "titulo": "Pesa a ração na balança",
+     "tipo": "etapa",
+     "raia": "vendedores",
+     "quem": "Vendedor",
+     "local": "balanca",
+     "registro": "",
+     "detalhe": "Usa o recipiente da marca pedida; cada marca fica no seu recipiente.",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "vg3",
+     "titulo": "Lança a venda no cadastro da marca",
+     "tipo": "etapa",
+     "raia": "vendedores",
+     "quem": "Vendedor",
+     "local": "balanca",
+     "registro": "Pedido em kg",
+     "detalhe": "O estoque daquela marca baixa só o peso vendido.",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "vg4",
+     "titulo": "Recebe o pagamento",
+     "tipo": "etapa",
+     "raia": "caixa",
+     "quem": "Operador do caixa",
+     "local": "caixa",
+     "registro": "",
+     "detalhe": "",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "vg5",
+     "titulo": "Emite a NFC-e",
+     "tipo": "etapa",
+     "raia": "caixa",
+     "quem": "Operador do caixa",
+     "local": "caixa",
+     "registro": "NFC-e",
+     "detalhe": "A porção pesada na loja sai sem código de barras.",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "vg6",
+     "titulo": "Leva a ração",
+     "tipo": "fim",
+     "raia": "cliente",
+     "quem": "",
+     "local": "entrada-principal",
+     "registro": "",
+     "detalhe": "",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    }
+   ]
+  },
+  {
+   "id": "entrada-mercadoria",
+   "nome": "Entrada de mercadoria",
+   "objetivo": "Da compra ao produto exposto, com o cadastro certo para o estoque e a escrituração.",
+   "raias": [
+    {
+     "id": "compras",
+     "nome": "Gerência e compras"
+    },
+    {
+     "id": "deposito",
+     "nome": "Depósito"
+    },
+    {
+     "id": "escritorio",
+     "nome": "Escritório"
+    },
+    {
+     "id": "loja",
+     "nome": "Loja"
+    }
+   ],
+   "etapas": [
+    {
+     "id": "em1",
+     "titulo": "Faz o pedido ao fornecedor",
+     "tipo": "inicio",
+     "raia": "compras",
+     "quem": "Gerência",
+     "local": "",
+     "registro": "Pedido de compra",
+     "detalhe": "",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "em2",
+     "titulo": "Recebe a mercadoria e a nota",
+     "tipo": "etapa",
+     "raia": "deposito",
+     "quem": "",
+     "local": "",
+     "registro": "NF-e do fornecedor",
+     "detalhe": "",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "em3",
+     "titulo": "Confere as quantidades com a nota",
+     "tipo": "etapa",
+     "raia": "deposito",
+     "quem": "",
+     "local": "",
+     "registro": "",
+     "detalhe": "Divergência volta para a gerência.",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "em4",
+     "titulo": "O produto já está cadastrado?",
+     "tipo": "decisao",
+     "raia": "escritorio",
+     "quem": "",
+     "local": "",
+     "registro": "",
+     "detalhe": "",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": [
+      {
+       "para": "em5",
+       "rotulo": "Não"
+      },
+      {
+       "para": "em6",
+       "rotulo": "Sim"
+      }
+     ]
+    },
+    {
+     "id": "em5",
+     "titulo": "Cadastra o produto",
+     "tipo": "etapa",
+     "raia": "escritorio",
+     "quem": "",
+     "local": "",
+     "registro": "Cadastro do produto",
+     "detalhe": "Um cadastro por marca e por embalagem: unidade de estoque, fator de conversão, código de barras e tributação.",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "em6",
+     "titulo": "Lança a nota no sistema",
+     "tipo": "etapa",
+     "raia": "escritorio",
+     "quem": "",
+     "local": "",
+     "registro": "Entrada da NF-e",
+     "detalhe": "Na unidade da nota do fornecedor (por exemplo, saco); o sistema converte para a unidade do estoque.",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "em7",
+     "titulo": "Expõe a mercadoria no setor",
+     "tipo": "etapa",
+     "raia": "loja",
+     "quem": "Vendedores",
+     "local": "",
+     "registro": "",
+     "detalhe": "",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    },
+    {
+     "id": "em8",
+     "titulo": "Mercadoria disponível para venda",
+     "tipo": "fim",
+     "raia": "loja",
+     "quem": "",
+     "local": "",
+     "registro": "",
+     "detalhe": "",
+     "situacao": "confirmar",
+     "resposta": "",
+     "saidas": null
+    }
+   ]
+  }
+ ]
+}
