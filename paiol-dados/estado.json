@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:43:49.072Z",
+ "salvoEm": "2026-10-22T14:44:11.472Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -339,7 +339,12 @@
     "y": 7.25,
     "w": 1.7,
     "h": 0.8,
-    "fotos": []
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjnj6zaa5a5.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "sal-mineral",
