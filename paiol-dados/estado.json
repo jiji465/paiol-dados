@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T13:39:40.669Z",
+ "salvoEm": "2026-10-22T13:39:51.739Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -93,7 +93,7 @@
     "grupo": "racao",
     "nome": "Ração a granel (dispensers)",
     "x": 12.25,
-    "y": 0.5,
+    "y": 1,
     "w": 0.5,
     "h": 2
    },
@@ -102,8 +102,8 @@
     "tipo": "movel",
     "grupo": "atendimento",
     "nome": "Balança",
-    "x": 12.5,
-    "y": 3.75,
+    "x": 12,
+    "y": 4,
     "w": 0.5,
     "h": 0.5
    },
@@ -113,9 +113,9 @@
     "grupo": "pet",
     "nome": "Pet",
     "x": 11.5,
-    "y": 3.75,
-    "w": 0.7,
-    "h": 0.7
+    "y": 4,
+    "w": 0.5,
+    "h": 0.5
    },
    {
     "id": "gaiolas",
