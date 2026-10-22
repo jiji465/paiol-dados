@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T13:42:02.641Z",
+ "salvoEm": "2026-10-22T13:47:34.487Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -56,22 +56,6 @@
     "y": 2.25,
     "w": 0.2,
     "h": 0.25
-   },
-   {
-    "id": "calcados-fundo",
-    "tipo": "estante",
-    "grupo": "calcados",
-    "nome": "Botas e chapéus",
-    "x": 5.75,
-    "y": 0,
-    "w": 5.5,
-    "h": 0.5,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjlba4p4nc8.jpg",
-      "legenda": ""
-     }
-    ]
    },
    {
     "id": "calcados-lateral",
@@ -372,6 +356,22 @@
     "h": 2.5,
     "x": 0,
     "y": 0
+   },
+   {
+    "id": "calcados-fundo",
+    "tipo": "estante",
+    "grupo": "calcados",
+    "nome": "Botas e chapéus",
+    "x": 5.75,
+    "y": 0,
+    "w": 0.5,
+    "h": 5.5,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjlba4p4nc8.jpg",
+      "legenda": ""
+     }
+    ]
    }
   ]
  },
