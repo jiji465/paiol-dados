@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:33:43.510Z",
+ "salvoEm": "2026-10-22T14:34:22.991Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -265,13 +265,7 @@
     "x": 0.1,
     "y": 17.4,
     "w": 0.5,
-    "h": 3.8,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjm9u0m9z5k.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 3.8
    },
    {
     "id": "passaros",
@@ -307,13 +301,7 @@
     "x": 3,
     "y": 15.7,
     "w": 1.8,
-    "h": 3.2,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjm7p48b2kr.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 3.2
    },
    {
     "id": "racoes-1",
@@ -371,13 +359,7 @@
     "x": 6.4,
     "y": 18.6,
     "w": 1.6,
-    "h": 1.2,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjm8vc3dms0.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 1.2
    },
    {
     "id": "txt-corredor",
@@ -445,29 +427,17 @@
     "x": 9.75,
     "y": 16.5,
     "w": 1.7,
-    "h": 3,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjm82iziq8g.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 3
    },
    {
     "id": "rocadeiras",
     "tipo": "estante",
     "grupo": "ferramentas",
     "nome": "Pulverizadores e roçadeiras",
-    "x": 12.5,
-    "y": 16.25,
+    "x": 12.4,
+    "y": 16.2,
     "w": 0.5,
-    "h": 5,
-    "fotos": [
-     {
-      "arquivo": "fotos/xmvjm8lad25ai.jpg",
-      "legenda": ""
-     }
-    ]
+    "h": 5
    },
    {
     "id": "entrada-principal",
