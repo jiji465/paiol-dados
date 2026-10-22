@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T14:36:00.741Z",
+ "salvoEm": "2026-10-22T14:36:16.134Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -109,7 +109,13 @@
     "x": 7,
     "y": 2.75,
     "w": 1.5,
-    "h": 1
+    "h": 1,
+    "fotos": [
+     {
+      "arquivo": "fotos/xmvjn8zxw3rx3.jpg",
+      "legenda": ""
+     }
+    ]
    },
    {
     "id": "dispensers",
