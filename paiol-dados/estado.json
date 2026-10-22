@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-22T15:20:50.837Z",
+ "salvoEm": "2026-10-22T17:56:13.588Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -22,16 +22,6 @@
       "legenda": ""
      }
     ]
-   },
-   {
-    "id": "porta-fundos-1",
-    "tipo": "porta",
-    "grupo": null,
-    "nome": "Porta",
-    "x": 1.5,
-    "y": 0.5,
-    "w": 0.2,
-    "h": 1
    },
    {
     "id": "porta-fundos-2",
@@ -498,6 +488,16 @@
       "legenda": ""
      }
     ]
+   },
+   {
+    "id": "porta-fundos-1",
+    "tipo": "porta",
+    "grupo": null,
+    "nome": "Porta",
+    "x": 1.5,
+    "y": 0.5,
+    "w": 0.2,
+    "h": 1
    }
   ]
  },
