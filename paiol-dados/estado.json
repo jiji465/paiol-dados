@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-23T11:59:10.514Z",
+ "salvoEm": "2026-10-23T11:59:17.179Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -320,8 +320,8 @@
     "tipo": "estante",
     "grupo": "racao",
     "nome": "Rações (paletes)",
-    "x": 7,
-    "y": 5.75,
+    "x": 6.25,
+    "y": 6.25,
     "w": 2.4,
     "h": 7.2,
     "fotos": [
@@ -496,31 +496,9 @@
     "nome": "Porta",
     "w": 1,
     "h": 0.2,
-    "x": 1.55,
+    "x": 1.5,
     "y": 0.25,
     "abre": 1
-   },
-   {
-    "id": "xmvkx2nmppg5f",
-    "tipo": "porta",
-    "grupo": null,
-    "nome": "Passagem",
-    "w": 0.2,
-    "h": 0.2,
-    "x": 6.8,
-    "y": 11,
-    "passagem": true
-   },
-   {
-    "id": "xmvkx2vvhn734",
-    "tipo": "porta",
-    "grupo": null,
-    "nome": "Passagem",
-    "w": 1,
-    "h": 0.2,
-    "x": 6,
-    "y": 11,
-    "passagem": true
    }
   ]
  },
