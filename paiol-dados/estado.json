@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-23T11:57:41.059Z",
+ "salvoEm": "2026-10-23T11:58:59.819Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -499,6 +499,17 @@
     "x": 1.55,
     "y": 0.25,
     "abre": 1
+   },
+   {
+    "id": "xmvkx2nmppg5f",
+    "tipo": "porta",
+    "grupo": null,
+    "nome": "Passagem",
+    "w": 0.2,
+    "h": 0.2,
+    "x": 6.8,
+    "y": 11,
+    "passagem": true
    }
   ]
  },
