@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-23T11:59:26.094Z",
+ "salvoEm": "2026-10-23T11:59:29.032Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -506,7 +506,7 @@
     "grupo": null,
     "nome": "Passagem",
     "w": 1.5,
-    "h": 0.25,
+    "h": 0.2,
     "x": 11.5,
     "y": 4.5,
     "passagem": true
