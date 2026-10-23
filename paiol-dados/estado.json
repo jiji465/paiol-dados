@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-23T12:00:28.857Z",
+ "salvoEm": "2026-10-23T12:01:18.936Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -794,7 +794,7 @@
     },
     {
      "id": "vg3",
-     "titulo": "Lança a venda no cadastro da marca",
+     "titulo": "Lança a venda no sistema",
      "tipo": "etapa",
      "raia": "vendedores",
      "quem": "Vendedor",
