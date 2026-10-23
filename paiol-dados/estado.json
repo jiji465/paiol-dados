@@ -1,6 +1,6 @@
 {
  "v": 4,
- "salvoEm": "2026-10-23T12:01:18.936Z",
+ "salvoEm": "2026-10-23T12:01:39.582Z",
  "planta": {
   "salao": {
    "w": 13,
@@ -820,7 +820,7 @@
     },
     {
      "id": "vg5",
-     "titulo": "Emite a NFC-e",
+     "titulo": "Emite a Nota Fiscal",
      "tipo": "etapa",
      "raia": "caixa",
      "quem": "Operador do caixa",
